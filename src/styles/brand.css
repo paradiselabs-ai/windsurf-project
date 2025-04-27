@@ -1,0 +1,57 @@
+/* ParadiseLabs Brand Kit: CSS Variables
+   Use these variables for colors, backgrounds, borders, and highlights to ensure consistent brand style across all sites and projects. */
+:root {
+  /* Backgrounds */
+  --color-bg-darkest: #181a20; /* Main background */
+  --color-bg-darker: #1a2238;
+  --color-bg-dark: #23263a;
+  --color-bg-medium: #2d3145;
+  --color-bg-light: #383c54;
+
+  /* Accents */
+  --color-accent-purple: #8e44ec; /* Dull neon purple */
+  --color-accent-blue: #37b6e4; /* Blue topaz/cyan mix */
+  --color-accent-cyan: #00ffe7; /* Neon turquoise */
+  --color-accent-green: #39ff14; /* Hacker green */
+
+  /* Text */
+  --color-text-main: #d6ddf4;
+  --color-text-muted: #a0aec0;
+  --color-link: var(--color-accent-cyan);
+
+  /* Borders & Highlights */
+  --color-border: var(--color-accent-green);
+  --color-divider: var(--color-accent-cyan);
+
+  /* Brand font families */
+  --font-sans: 'Inter', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Mono', 'Menlo', 'Monaco', monospace;
+}
+
+body {
+  background: var(--color-bg-darkest);
+  color: var(--color-text-main);
+  font-family: var(--font-sans);
+}
+
+/* Example usage: */
+.navbar, .footer {
+  background: var(--color-bg-darker);
+  border-bottom: 2px solid var(--color-border);
+}
+.card {
+  background: var(--color-bg-dark);
+  border: 1px solid var(--color-divider);
+  border-radius: 10px;
+}
+.button-primary {
+  background: var(--color-accent-purple);
+  color: #fff;
+}
+.button-secondary {
+  background: var(--color-accent-blue);
+  color: #fff;
+}
+.highlight {
+  color: var(--color-accent-green);
+}

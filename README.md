@@ -1,42 +1,78 @@
-![Spectre, a terminal-inspired theme for Astro.](./images/README.png)
+# windsurf-project: #buildinginpublic Astro Spectre Blog
 
-Spectre is a terminal-inspired theme for Astro, built using TypeScript and Astro.
+## Overview
+A minimal, visually appealing, Markdown-first blog built with Astro (Spectre theme). No CMS, no backend—just write Markdown and push to GitHub. Designed for sharing open-source and startup progress, devlogs, and honest reflections.
 
-## Getting Started
+---
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/louisescher/spectre/tree/main)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/louisescher/spectre/tree/main)
+## 🚀 Quick Start
 
-Alternatively, you can create a new Astro project with Spectre like this:
+1. **Clone the repo:**
+   ```sh
+   git clone https://github.com/paradiselabs-ai/windsurf-project.git
+   cd windsurf-project
+   ```
+2. **Install dependencies:**
+   ```sh
+   npm install
+   ```
+3. **Start the dev server:**
+   ```sh
+   npm run dev
+   ```
+   Visit http://localhost:4321
 
-```bash
-# npm
-npm create astro@latest -- --template louisescher/spectre
+---
 
-# pnpm
-pnpm create astro@latest --template louisescher/spectre
+## 📝 Content Structure
+- `content/blog/` – Company/devlog posts
+- `content/articles/` – AI/informative/opinion articles
+- `content/about.md` – About page
+- `content/index.md` – Home page
 
-# yarn
-yarn create astro --template louisescher/spectre
-```
+**To add a post:**
+- Create a new `.md` file in `content/blog/` or `content/articles/`
+- Use frontmatter (`---` at the top) for title, date, summary, tags
+- Push to GitHub: site auto-rebuilds on Vercel
 
-## Features
+---
 
-- 100 / 100 Lighthouse performance
-- Responsive for all screen sizes
-- Fully accessible
-- Type-Safe
-- Auto-generated sitemap
-- Markdown / MDX Support
-- Builds on content collections
-- Search powered by [pagefind](https://pagefind.app)
-- Comments powered by [giscus](https://giscus.app) (can be turned off)
-- More!
+## 🌐 Deployment
+- Connect this repo to [Vercel](https://vercel.com/)
+- Every push to `main` auto-deploys
+- Custom domain: configure in Vercel dashboard
 
-## Curious?
+---
 
-Head over to [the preview page](https://spectre.louisescher.dev) to find out more!
+## 🤖 No CMS Needed
+- All content is Markdown, versioned in Git
+- No admin panel, no database, no backend
+- Update from any device by editing Markdown and pushing to GitHub
 
-### Spectre Integration
+---
 
-If you want to know more about how the custom integration that is used in the `astro.config.ts` file works, head over to the [integration's own README](https://github.com/louisescher/spectre/tree/master/package)!
+## (Optional) CollectedNotes API Integration
+- You can extend the site to pull posts from [CollectedNotes](https://collectednotes.com/) for mobile publishing
+- See `docs/PLAN.md` for integration ideas
+
+---
+
+## 🛠️ Customization
+- Built with [Astro](https://astro.build/) and the [Spectre theme](https://astro.build/themes/details/spectre/)
+- Easy to customize styles, navigation, and content structure
+
+---
+
+## 🙌 Credits
+- [Spectre Theme by Louis Escher](https://astro.build/themes/details/spectre/)
+- [Astro](https://astro.build/)
+
+---
+
+## 💡 #buildinginpublic
+Share your journey. Ship early. Iterate in the open.
+
+---
+
+### License
+MIT

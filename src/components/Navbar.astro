@@ -5,7 +5,7 @@ import { name } from 'spectre:globals';
 const path = Astro.url.pathname;
 ---
 <nav>
-  <a class="site-title" href="/">{name}</a>
+  <a class="site-title" href="/">ParadiseLabs</a>
   <ul>
     <li>
       <a href="/blog" class:list={{ active: path === '/blog' }}>Blog</a>
@@ -13,6 +13,25 @@ const path = Astro.url.pathname;
     <li class="nav-separator">/</li>
     <li>
       <a href="/projects" class:list={{ active: path === '/projects' }}>Projects</a>
+    </li>
+    <li class="nav-separator">/</li>
+    <li>
+      <a href="https://github.com/paradiselabs-ai" target="_blank" rel="noopener noreferrer" title="ParadiseLabs GitHub" style="color:var(--color-accent-cyan);">
+        <Icon type="lucide" name="github" width={22} height={22} style="vertical-align:middle;" />
+        <span class="sr-only">GitHub</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://twitter.com/paradiselabs_ai" target="_blank" rel="noopener noreferrer" title="ParadiseLabs Twitter" style="color:var(--color-accent-purple);margin-left:8px;">
+        <Icon type="lucide" name="twitter" width={22} height={22} style="vertical-align:middle;" />
+        <span class="sr-only">Twitter</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://discord.gg/uQ69vc4Agc" target="_blank" rel="noopener noreferrer" title="ParadiseLabs Discord" style="color:var(--color-accent-green);margin-left:8px;">
+        <img src="/images/discord.svg" width="22" height="22" style="vertical-align:middle;filter:drop-shadow(0 0 2px var(--color-bg-darkest));" alt="Discord" />
+        <span class="sr-only">Discord</span>
+      </a>
     </li>
     <li class="nav-separator">/</li>
     <li>

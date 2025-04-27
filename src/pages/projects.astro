@@ -1,65 +1,86 @@
 ---
 import '../styles/article-list.css';
 
-import { getCollection } from "astro:content";
-import Card from "../components/Card.astro";
 import Icon from "../components/Icon.astro";
 import Layout from "../layouts/Layout.astro";
 import { openGraph } from 'spectre:globals';
 
-const projects = await getCollection('projects');
 ---
 <Layout
 	title={openGraph.projects.title || "Projects"}
 	description={openGraph.projects.description}
 	pagefindIgnore
 >
-  <div class="layout-grid-left" slot="left">
-    <Card class="flex-col-card">
-      <h2 class="no-mt">Stats</h2>
-			<div class="stats-div">
-				<div class="stat">
-					<h3 class="text-glow">{projects.length}</h3>
-					<span>Project{projects.length > 1 ? 's' : ''}</span>
-				</div>
-			</div>
-    </Card>
+  # Projects
+
+  Welcome to the ParadiseLabs project hub! Here you’ll find all our open-source and product initiatives. Click any card to learn more.
+
+  <div class="projects-grid">
+    <div class="project-card">
+      <img src="/images/glue.svg" alt="GLUE Logo" class="project-logo" />
+      <h2>GLUE</h2>
+      <p>Agentic pipeline framework for building, connecting, and orchestrating AI agents, tools, and workflows.</p>
+      <a href="https://applyglue.com" target="_blank" rel="noopener noreferrer" class="project-link">Visit Site</a>
+      <a href="https://github.com/paradiselabs-ai/glue" target="_blank" rel="noopener noreferrer" class="project-link">GitHub</a>
+    </div>
+    <!-- Add more project cards below as you launch new projects -->
+    <div class="project-card placeholder">
+      <div class="project-logo placeholder-icon">+</div>
+      <h2>Your Project Here</h2>
+      <p>Have an idea? Launch it with ParadiseLabs and see it featured here.</p>
+      <a href="/contact" class="project-link">Contact Us</a>
+    </div>
   </div>
-  <div class="layout-grid-right" slot="right">
-		<Card>
-			<div class="header-container">
-				<Icon type='lucide' name="folder-git" width={24} height={24} class='glow-icon' />
-				<h2>Latest Projects</h2>
-			</div>
-			<div class="content-container">
-				{projects.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).map((post) => (
-					<a href={`/projects/${post.id}`} class="post-container">
-						<div class="post-header">
-							<h3>{post.data.title}</h3>
-							<span class="post-date">{post.data.date.toLocaleDateString()}</span>
-						</div>
-						<span>{post.data.description}</span>
-					</a>
-				))}
-			</div>
-		</Card>
-  </div>
+
+  <style>
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  .project-card {
+    background: var(--color-bg-dark);
+    border: 2px solid var(--color-divider);
+    border-radius: 12px;
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: border-color 0.2s;
+  }
+  .project-card:hover {
+    border-color: var(--color-accent-cyan);
+  }
+  .project-logo {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    background: var(--color-bg-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .project-card.placeholder .project-logo {
+    font-size: 2.5rem;
+    color: var(--color-accent-green);
+    background: var(--color-bg-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .project-link {
+    margin-top: 1rem;
+    color: var(--color-link);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: color 0.2s;
+  }
+  .project-link:hover {
+    color: var(--color-accent-purple);
+  }
+  </style>
 </Layout>
-<style>
-	.stats-div {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
-
-	.stat {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.stat h3 {
-		font-size: 2em;
-		margin: 0;
-		margin-bottom: .5rem;
-	}
-</style>

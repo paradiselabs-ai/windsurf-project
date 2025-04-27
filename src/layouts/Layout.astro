@@ -1,11 +1,11 @@
 ---
 import '../styles/reset.css';
 import '../styles/globals.css';
+import '../styles/brand.css';
 
 import Background from '../components/Background.astro';
 import Navbar from '../components/Navbar.astro';
 import LayoutGrid from '../components/LayoutGrid.astro';
-import { name, themeColor, twitterHandle } from 'spectre:globals';
 
 interface Props {
 	title: string;
@@ -29,37 +29,55 @@ const { title, description, image, pagefindIgnore, article } = Astro.props;
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 
-		<title>{title}</title>
-		{description && <meta name="description" content={description} />}
-		<meta name="theme-color" content={themeColor}>
+		<!-- Site Meta -->
+		<title>{title ? `${title} | ParadiseLabs Blog` : 'ParadiseLabs Blog'}</title>
+		<meta name="description" content={description || 'ParadiseLabs, LLC official blog – Building in public, devlogs, and insights on open-source, AI, and startup life.'} />
+		<meta name="author" content="ParadiseLabs, LLC" />
+		<meta name="copyright" content="ParadiseLabs, LLC" />
+		<meta name="application-name" content="ParadiseLabs Blog" />
+		<link rel="canonical" href={Astro.site || 'https://paradiselabs.co'} />
+		<meta name="robots" content="index, follow" />
+		<meta name="publisher" content="ParadiseLabs, LLC" />
 
-		<link rel="canonical" href={Astro.site} />
-
-		<meta name="og:title" content={title} />
-		{description && <meta name="og:description" content={description} />}
-		<meta name="og:image" content={image?.src || '/img/og.png'} />
-		<meta name="og:url" content={Astro.site} />
-		{!article && <meta name="og:type" content="website" />}
-		<meta name="og:locale" content="en" />
-
+		<!-- Open Graph / Facebook -->
+		<meta property="og:site_name" content="ParadiseLabs Blog" />
+		<meta property="og:title" content={title ? `${title} | ParadiseLabs Blog` : 'ParadiseLabs Blog'} />
+		{description && <meta property="og:description" content={description} />}
+		<meta property="og:image" content={image?.src || '/img/og.png'} />
+		<meta property="og:url" content={Astro.site || 'https://paradiselabs.co'} />
+		{!article && <meta property="og:type" content="website" />}
+		<meta property="og:locale" content="en_US" />
 		{article && (
-			<meta name="og:type" content="article" />
-			<meta property="article:published_time" content={article.createdAt.toISOString()} />
-			<meta name="author" content={name} />
+			<>
+				<meta property="og:type" content="article" />
+				<meta property="article:published_time" content={article.createdAt.toISOString()} />
+				<meta name="author" content="ParadiseLabs, LLC" />
+			</>
 		)}
-
 		{article && article.updatedAt && (
 			<meta property="article:modified_time" content={article.updatedAt.toISOString()} />
 		)}
 
+		<!-- Twitter Meta Tags -->
 		<meta name="twitter:card" content="summary_large_image" />
-		{twitterHandle && (
-			<meta name="twitter:site" content={twitterHandle} />
-			<meta name="twitter:creator" content={twitterHandle} />
-		)}
-		<meta name="twitter:title" content={title} />
+		<meta name="twitter:site" content="@paradiselabs_ai" />
+		<meta name="twitter:creator" content="@paradiselabs_ai" />
+		<meta name="twitter:title" content={title ? `${title} | ParadiseLabs Blog` : 'ParadiseLabs Blog'} />
 		{description && <meta name="twitter:description" content={description} />}
 		<meta name="twitter:image" content={image?.src || '/img/og.png'} />
+
+		<!-- Favicon & Theme -->
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="theme-color" content="#1a2238" />
+
+		<!-- Analytics: Google Analytics Example (add your GA ID) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'G-XXXXXXXXXX'); // Replace with your GA4 Measurement ID
+		</script>
 	</head>
 	<body>
 		<main data-pagefind-ignore={pagefindIgnore}>

@@ -1,0 +1,22 @@
+<svg width="600" height="200" viewBox="0 0 600 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="600" height="200" fill="var(--color-bg-darkest)"/>
+  <g>
+    <circle cx="70" cy="100" r="40" fill="var(--color-accent-cyan)"/>
+    <g stroke="white" stroke-width="10">
+      <line x1="70" y1="60" x2="70" y2="30" />
+      <line x1="70" y1="140" x2="70" y2="170" />
+      <line x1="110" y1="100" x2="150" y2="100" />
+      <line x1="30" y1="100" x2="-10" y2="100" />
+      <line x1="110" y1="140" x2="140" y2="170" />
+      <line x1="30" y1="60" x2="0" y2="30" />
+    </g>
+    <circle cx="70" cy="30" r="10" fill="white"/>
+    <circle cx="70" cy="170" r="10" fill="white"/>
+    <circle cx="150" cy="100" r="10" fill="white"/>
+    <circle cx="-10" cy="100" r="10" fill="white"/>
+    <circle cx="140" cy="170" r="10" fill="white"/>
+    <circle cx="0" cy="30" r="10" fill="white"/>
+  </g>
+  <rect x="170" y="40" width="8" height="120" fill="white"/>
+  <text x="200" y="135" font-family="'Inter', Arial, sans-serif" font-size="80" fill="white" font-weight="bold">PARADISELABS</text>
+</svg>

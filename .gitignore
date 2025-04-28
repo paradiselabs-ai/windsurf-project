@@ -30,3 +30,4 @@ windsurf-project.code-workspace
 
 # jetbrains setting folder
 .idea/
+.vercel

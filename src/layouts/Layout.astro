@@ -38,33 +38,16 @@ const { title, description, image, pagefindIgnore, article } = Astro.props;
 		<link rel="canonical" href={Astro.site || 'https://paradiselabs.co'} />
 		<meta name="robots" content="index, follow" />
 		<meta name="publisher" content="ParadiseLabs, LLC" />
-
-		<!-- Open Graph / Facebook -->
-		<meta property="og:site_name" content="ParadiseLabs Blog" />
 		<meta property="og:title" content={title ? `${title} | ParadiseLabs Blog` : 'ParadiseLabs Blog'} />
-		{description && <meta property="og:description" content={description} />}
-		<meta property="og:image" content={image?.src || '/img/og.png'} />
+		<meta property="og:description" content={description || 'ParadiseLabs, LLC official blog – Building in public, devlogs, and insights on open-source, AI, and startup life.'} />
+		<meta property="og:type" content="website" />
 		<meta property="og:url" content={Astro.site || 'https://paradiselabs.co'} />
-		{!article && <meta property="og:type" content="website" />}
-		<meta property="og:locale" content="en_US" />
-		{article && (
-			<>
-				<meta property="og:type" content="article" />
-				<meta property="article:published_time" content={article.createdAt.toISOString()} />
-				<meta name="author" content="ParadiseLabs, LLC" />
-			</>
-		)}
-		{article && article.updatedAt && (
-			<meta property="article:modified_time" content={article.updatedAt.toISOString()} />
-		)}
-
-		<!-- Twitter Meta Tags -->
+		<meta property="og:image" content={image ? image.src : '/images/og-paradiselabs.png'} />
 		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:site" content="@paradiselabs_ai" />
-		<meta name="twitter:creator" content="@paradiselabs_ai" />
 		<meta name="twitter:title" content={title ? `${title} | ParadiseLabs Blog` : 'ParadiseLabs Blog'} />
-		{description && <meta name="twitter:description" content={description} />}
-		<meta name="twitter:image" content={image?.src || '/img/og.png'} />
+		<meta name="twitter:description" content={description || 'ParadiseLabs, LLC official blog – Building in public, devlogs, and insights on open-source, AI, and startup life.'} />
+		<meta name="twitter:image" content={image ? image.src : '/images/og-paradiselabs.png'} />
+		<link rel="stylesheet" href="/src/styles/brand.css" />
 
 		<!-- Favicon & Theme -->
 		<link rel="icon" href="/favicon.ico" />

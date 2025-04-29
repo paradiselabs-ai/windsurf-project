@@ -12,11 +12,14 @@ export interface CollectedNote {
 }
 
 export async function fetchCollectedNotesPrivate(): Promise<CollectedNote[]> {
+  const email = process.env.COLLECTEDNOTES_EMAIL;
+  const token = process.env.COLLECTEDNOTES_TOKEN;
+  if (!email || !token) throw new Error('Missing COLLECTEDNOTES_EMAIL or COLLECTEDNOTES_TOKEN environment variables');
   const res = await fetch('https://collectednotes.com/api/notes', {
     headers: {
       'Content-Type': 'application/json',
-      'X-User-Email': process.env.COLLECTEDNOTES_EMAIL,
-      'X-User-Token': process.env.COLLECTEDNOTES_TOKEN,
+      'X-User-Email': email,
+      'X-User-Token': token,
     },
   });
   if (!res.ok) throw new Error('Failed to fetch CollectedNotes');
@@ -33,12 +36,15 @@ export async function fetchCollectedNotesPrivate(): Promise<CollectedNote[]> {
 }
 
 export async function createCollectedNote(note: {body: string, title?: string, private?: boolean}): Promise<CollectedNote> {
+  const email = process.env.COLLECTEDNOTES_EMAIL;
+  const token = process.env.COLLECTEDNOTES_TOKEN;
+  if (!email || !token) throw new Error('Missing COLLECTEDNOTES_EMAIL or COLLECTEDNOTES_TOKEN environment variables');
   const res = await fetch('https://collectednotes.com/api/notes', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-User-Email': process.env.COLLECTEDNOTES_EMAIL,
-      'X-User-Token': process.env.COLLECTEDNOTES_TOKEN,
+      'X-User-Email': email,
+      'X-User-Token': token,
     },
     body: JSON.stringify({ note }),
   });

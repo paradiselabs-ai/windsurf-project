@@ -11,27 +11,29 @@ import { fetchCollectedNotesPrivate, createCollectedNote } from '../utils/collec
 const posts = await getCollection('posts', (post) => post.data.draft !== true);
 const tags = posts.flatMap((post) => post.data.tags.map((tag) => tag.id));
 
-const email = import.meta.env.COLLECTEDNOTES_EMAIL;
-const token = import.meta.env.COLLECTEDNOTES_TOKEN;
-const collectedNotes = await fetchCollectedNotesPrivate(email, token);
+const collectedNotes = await fetchCollectedNotesPrivate();
 let creationError = '';
 
 if (Astro.request.method === 'POST') {
   try {
     const formData = await Astro.request.formData();
-    const noteBody = formData.get('body');
-    const noteTitle = formData.get('title');
+    const noteBody = formData.get('body') as string;
+    const noteTitle = formData.get('title') as string;
     const notePrivate = formData.get('private') === 'on';
     if (noteBody) {
-      await createCollectedNote(email, token, {
-        body: noteBody,
-        title: noteTitle || undefined,
-        private: notePrivate
-      });
-      // Optionally: redirect or refresh
+      try {
+        await createCollectedNote({
+          body: noteBody,
+          title: noteTitle || undefined,
+          private: notePrivate
+        });
+        // Optionally: redirect or refresh
+      } catch (e) {
+        creationError = e instanceof Error ? e.message : 'Failed to create note due to an unknown error.';
+      }
     }
   } catch (e) {
-    creationError = e.message || 'Failed to create note.';
+    creationError = e instanceof Error ? e.message : 'Failed to process form data.';
   }
 }
 ---
@@ -57,16 +59,6 @@ if (Astro.request.method === 'POST') {
         ))}
       </ul>
     </Card>
-    <Card style="margin-top:2rem;">
-      <h2 class="no-mt">New CollectedNote</h2>
-      {creationError && <div class="error">{creationError}</div>}
-      <form method="POST">
-        <input type="text" name="title" placeholder="Title (optional)" />
-        <textarea name="body" placeholder="Write your note here..." required></textarea>
-        <label><input type="checkbox" name="private" /> Private</label>
-        <button type="submit">Post to CollectedNotes</button>
-      </form>
-    </Card>
   </div>
   <div class="layout-grid-right" slot="right">
     <Card>
@@ -84,11 +76,20 @@ if (Astro.request.method === 'POST') {
             <span>{post.data.description}</span>
           </a>
         ))}
-        <!-- CollectedNotes Posts -->
-        {collectedNotes && collectedNotes.length > 0 && (
-          <>
-            <h3 style={{ marginTop: '2rem' }}>From CollectedNotes</h3>
-            {collectedNotes.map(note => (
+        <section>
+          <h2>Collected Notes Integration</h2>
+
+          {creationError && <p style="color: red;">{creationError}</p>}
+
+          <form method="POST" class="note-form">
+            <input type="text" name="title" placeholder="Title (optional)" />
+            <textarea name="body" placeholder="Write your note here..." required></textarea>
+            <label><input type="checkbox" name="private" /> Private</label>
+            <button type="submit">Post to CollectedNotes</button>
+          </form>
+
+          {collectedNotes && collectedNotes.length > 0 ? (
+            collectedNotes.map(note => (
               <a href={note.url} class="post-container" target="_blank" rel="noopener noreferrer">
                 <div class="post-header">
                   <h3>{note.title}</h3>
@@ -97,9 +98,11 @@ if (Astro.request.method === 'POST') {
                 <span>{note.body.substring(0, 120)}...</span>
                 {note.private && <span class="private-label">Private</span>}
               </a>
-            ))}
-          </>
-        )}
+            ))
+          ) : (
+            <p>No notes fetched from CollectedNotes yet, or the API call failed.</p>
+          )}
+        </section>
       </div>
     </Card>
   </div>

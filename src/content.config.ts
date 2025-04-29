@@ -1,7 +1,8 @@
 import { file, glob } from "astro/loaders";
 import { defineCollection, z, reference } from "astro:content";
 import type { icons as lucideIcons } from '@iconify-json/lucide/icons.json';
-import type { icons as simpleIcons } from '@iconify-json/simple-icons/icons.json';
+import simpleIconsData from '@iconify-json/simple-icons/icons.json';
+type SimpleIconsType = typeof simpleIconsData.icons;
 
 const other = defineCollection({
   loader: glob({ base: "src/content/other", pattern: "**/*.{md,mdx}" }),
@@ -55,7 +56,7 @@ const tags = defineCollection({
 });
 
 const posts = defineCollection({
-  loader: glob({ base: "src/content/posts", pattern: "**/*.{md,mdx}" }),
+  loader: glob({ base: "src/content/blog", pattern: "**/*.{md,mdx}" }),
   schema: ({ image }) => z.object({
     title: z.string(),
     createdAt: z.coerce.date(),
@@ -70,7 +71,7 @@ const posts = defineCollection({
 });
 
 const projects = defineCollection({
-  loader: glob({ base: "src/content/projects", pattern: "**/*.{md,mdx}" }),
+  loader: glob({ base: "src/content/articles", pattern: "**/*.{md,mdx}" }),
   schema: ({ image }) => z.object({
     title: z.string(),
     description: z.string(),

@@ -1,8 +1,17 @@
 ---
 title: "The Realities of AI Hype"
 date: 2025-04-25
-summary: "Opinion: The AI hype cycle is real—here’s how to cut through it."
-tags: ["ai", "opinion", "hype"]
+description: "Opinion: The AI hype cycle is real—here’s how to cut through it."
+image: /images/placeholder-article.png
+info:
+  - text: "Category"
+    icon:
+      type: "lucide"
+      name: "book-open"
+  - text: "Reading Time"
+    icon:
+      type: "lucide"
+      name: "clock"
 ---
 
 # The Realities of AI Hype

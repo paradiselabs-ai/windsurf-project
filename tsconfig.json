@@ -1,5 +1,10 @@
 {
   "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+    // You can add other specific compiler options here if needed
+  },
   "include": [".astro/types.d.ts", "**/*"],
   "exclude": ["dist"]
 }

@@ -3,7 +3,7 @@ title: "What is GLUE?"
 createdAt: 2025-04-25
 description: "A quick intro to the GLUE project and why it matters for open-source AI."
 tags: ["project", "glue", "open-source"]
-image: /images/glue-logo.svg
+image: ./glue-logo.svg
 ---
 
 # What is GLUE?

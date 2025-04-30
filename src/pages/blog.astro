@@ -114,16 +114,18 @@ if (Astro.request.method === 'POST') {
   const posts = document.querySelectorAll('.post-container');
 
   tags.forEach((tag) => {
-    let active = false;
-    if (currentTags?.includes(tag.dataset.tag)) {
-      tag.classList.add('active');
-      active = true;
-    }
+    if (tag instanceof HTMLAnchorElement) {
+      let active = false;
+      if (currentTags?.includes(tag.dataset.tag)) {
+        tag.classList.add('active');
+        active = true;
+      }
 
-    if (active) {
-      tag.href = `/blog?tags=${currentTags?.filter((t) => t !== tag.dataset.tag).join(',')}`;
-    } else {
-      tag.href = `/blog?tags=${currentTags ? [...currentTags, tag.dataset.tag].join(',') : tag.dataset.tag}`;
+      if (active) {
+        tag.href = `/blog?tags=${currentTags?.filter((t) => t !== tag.dataset.tag).join(',')}`;
+      } else {
+        tag.href = `/blog?tags=${currentTags ? [...currentTags, tag.dataset.tag].join(',') : tag.dataset.tag}`;
+      }
     }
   });
 

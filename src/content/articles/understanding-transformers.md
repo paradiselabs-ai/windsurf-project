@@ -2,7 +2,6 @@
 title: "Understanding Transformers in Plain English"
 date: 2025-04-25
 description: "A practical, founder-friendly explanation of transformer models."
-image: /images/placeholder-transformers.png
 info:
   - text: "Topic"
     icon:

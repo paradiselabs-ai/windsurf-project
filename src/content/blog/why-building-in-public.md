@@ -3,7 +3,6 @@ title: "Why I’m Building in Public (and Why You Should Too)"
 createdAt: 2025-04-25
 description: "A founder’s honest take on sharing the journey, building in public, and why it matters."
 tags: ["buildinginpublic", "founder", "devlog"]
-image: /images/placeholder-blog.png
 ---
 
 # Why I’m Building in Public (and Why You Should Too)

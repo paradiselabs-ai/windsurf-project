@@ -6,14 +6,16 @@ import Card from "../components/Card.astro";
 import Icon from "../components/Icon.astro";
 import Layout from "../layouts/Layout.astro";
 import { openGraph } from 'spectre:globals';
-import { fetchCollectedNotesPrivate, createCollectedNote } from '../utils/collectedNotes';
+// import { fetchCollectedNotesPrivate, createCollectedNote } from '../utils/collectedNotes';
 
 const posts = await getCollection('posts', (post) => post.data.draft !== true);
 const tags = posts.flatMap((post) => post.data.tags.map((tag) => tag.id));
 
-const collectedNotes = await fetchCollectedNotesPrivate();
+// const collectedNotes = await fetchCollectedNotesPrivate();
+const collectedNotes: any[] = []; // Define as empty array for now
 let creationError = '';
 
+/*
 if (Astro.request.method === 'POST') {
   try {
     const formData = await Astro.request.formData();
@@ -22,11 +24,11 @@ if (Astro.request.method === 'POST') {
     const notePrivate = formData.get('private') === 'on';
     if (noteBody) {
       try {
-        await createCollectedNote({
-          body: noteBody,
-          title: noteTitle || undefined,
-          private: notePrivate
-        });
+        // await createCollectedNote({
+        //   body: noteBody,
+        //   title: noteTitle || undefined,
+        //   private: notePrivate
+        // });
         // Optionally: redirect or refresh
       } catch (e) {
         creationError = e instanceof Error ? e.message : 'Failed to create note due to an unknown error.';
@@ -36,6 +38,7 @@ if (Astro.request.method === 'POST') {
     creationError = e instanceof Error ? e.message : 'Failed to process form data.';
   }
 }
+*/
 ---
 <Layout
   title={openGraph.blog.title || "Blog"}
@@ -76,6 +79,8 @@ if (Astro.request.method === 'POST') {
             <span>{post.data.description}</span>
           </a>
         ))}
+        {/* CollectedNotes Section Start */}
+        {/*
         <section>
           <h2>Collected Notes Integration</h2>
 
@@ -103,6 +108,8 @@ if (Astro.request.method === 'POST') {
             <p>No notes fetched from CollectedNotes yet, or the API call failed.</p>
           )}
         </section>
+        */}
+        {/* CollectedNotes Section End */}
       </div>
     </Card>
   </div>

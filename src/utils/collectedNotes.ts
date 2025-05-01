@@ -12,8 +12,8 @@ export interface CollectedNote {
 }
 
 export async function fetchCollectedNotesPrivate(): Promise<CollectedNote[]> {
-  const email = process.env.COLLECTEDNOTES_EMAIL;
-  const token = process.env.COLLECTEDNOTES_TOKEN;
+  const email = import.meta.env.COLLECTEDNOTES_EMAIL;
+  const token = import.meta.env.COLLECTEDNOTES_TOKEN;
   if (!email || !token) throw new Error('Missing COLLECTEDNOTES_EMAIL or COLLECTEDNOTES_TOKEN environment variables');
   const res = await fetch('https://collectednotes.com/api/notes', {
     headers: {
@@ -36,8 +36,8 @@ export async function fetchCollectedNotesPrivate(): Promise<CollectedNote[]> {
 }
 
 export async function createCollectedNote(note: {body: string, title?: string, private?: boolean}): Promise<CollectedNote> {
-  const email = process.env.COLLECTEDNOTES_EMAIL;
-  const token = process.env.COLLECTEDNOTES_TOKEN;
+  const email = import.meta.env.COLLECTEDNOTES_EMAIL;
+  const token = import.meta.env.COLLECTEDNOTES_TOKEN;
   if (!email || !token) throw new Error('Missing COLLECTEDNOTES_EMAIL or COLLECTEDNOTES_TOKEN environment variables');
   const res = await fetch('https://collectednotes.com/api/notes', {
     method: 'POST',

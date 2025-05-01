@@ -5,16 +5,14 @@ import { name } from 'spectre:globals';
 const path = Astro.url.pathname;
 ---
 <nav>
-  <a class="site-title" href="/">ParadiseLabs</a>
+  <a class="site-title" href="/"><img src="/images/paradise-logo.jpg" alt="Paradise Labs Logo" height="30" /></a>
   <ul>
     <li>
-      <a href="/blog" class:list={{ active: path === '/blog' }}>Blog</a>
+      <a href="/blog" class:list={{ active: path.startsWith('/blog') }}>Blog</a>
     </li>
-    <li class="nav-separator">/</li>
     <li>
-      <a href="/projects" class:list={{ active: path === '/projects' }}>Projects</a>
+      <a href="/articles" class:list={{ active: path.startsWith('/articles') }}>AI</a>
     </li>
-    <li class="nav-separator">/</li>
     <li>
       <a href="https://github.com/paradiselabs-ai" target="_blank" rel="noopener noreferrer" title="ParadiseLabs GitHub" style="color:var(--color-accent-cyan);">
         <Icon type="lucide" name="github" width={22} height={22} style="vertical-align:middle;" />
@@ -33,7 +31,6 @@ const path = Astro.url.pathname;
         <span class="sr-only">Discord</span>
       </a>
     </li>
-    <li class="nav-separator">/</li>
     <li>
       <input id="search" type="text" placeholder="Search (Ctrl+K)" />
       <div id="search-results"></div>
@@ -268,10 +265,6 @@ const path = Astro.url.pathname;
 
     .mobile-nav-toggle {
       display: flex;
-    }
-
-    .nav-separator {
-      display: none;
     }
 
     nav ul {

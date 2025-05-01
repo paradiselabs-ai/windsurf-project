@@ -12,27 +12,27 @@ import { getCollection } from "astro:content";
 import { giscus } from 'spectre:globals';
 
 interface Props {
-  project: CollectionEntry<'projects'>;
+  article: CollectionEntry<'articles'>;
 }
 
-const { project } = Astro.props;
+const { article } = Astro.props;
 
 export const getStaticPaths = (async () => {
-  const projects = await getCollection('projects'); 
+  const articles = await getCollection('articles'); 
 
-  return projects.map((project) => ({ params: { article: project.id }, props: { project } }));
+  return articles.map((article) => ({ params: { article: article.id }, props: { article } }));
 }) satisfies GetStaticPaths;
 
-const { Content, headings } = await render(project);
+const { Content, headings } = await render(article);
 ---
 
 <Layout
-  title={project.data.title}
-  description={project.data.description}
-  image={project.data.image}
+  title={article.data.title}
+  description={article.data.description}
+  image={article.data.image}
   article={{
-    createdAt: project.data.date, 
-    updatedAt: project.data.date, 
+    createdAt: article.data.date, 
+    updatedAt: article.data.date, 
   }}
 >
   <div class="left" slot="left">
@@ -40,7 +40,7 @@ const { Content, headings } = await render(project);
       <h2 class="no-mt">Table of contents</h2>
       <ol>
         <li class="toc-li">
-          <a href={`#_top`} class="active">{project.data.title}</a> 
+          <a href={`#_top`} class="active">{article.data.title}</a> 
         </li>
         {headings.map((heading, i) => (
           <li class="toc-li" data-depth={heading.depth}>
@@ -54,15 +54,15 @@ const { Content, headings } = await render(project);
     <Card>
       <div class="article-header" id="_top" data-pagefind-ignore>
         {/* Conditionally render ImageGlow only if image exists */}
-        {project.data.image && (
-          <ImageGlow quality={100} class="article-image" src={project.data.image} alt={project.data.title} />
+        {article.data.image && (
+          <ImageGlow quality={100} class="article-image" src={article.data.image} alt={article.data.title} />
         )}
         <div class="header">
           <div>
-            <h1 class="no-mt article-h1">{project.data.title}</h1>
+            <h1 class="no-mt article-h1">{article.data.title}</h1>
           </div>
           <div class="article-info">
-            <span>{project.data.date.toLocaleDateString()}</span>
+            <span>{article.data.date.toLocaleDateString()}</span>
           </div>
         </div>
       </div>

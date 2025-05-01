@@ -9,7 +9,7 @@ import { spectreDark } from './src/ec-theme';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://spectre.louisescher.dev',
+  site: 'https://paradiselabs.co',
   integrations: [
     expressiveCode({
       themes: [spectreDark],
@@ -17,31 +17,20 @@ export default defineConfig({
     mdx(),
     sitemap(),
     spectre({
-      name: 'Spectre',
+      name: 'Paradise Labs',
       openGraph: {
         home: {
-          title: 'Spectre',
-          description: 'A minimalistic theme for Astro.'
+          title: 'Paradise Labs',
+          description: 'Building in public at Paradise Labs.'
         },
         blog: {
-          title: 'Blog',
-          description: 'News and guides for Spectre.'
+          title: 'Blog | Paradise Labs',
+          description: 'Updates and insights from Paradise Labs.'
         },
         projects: {
-          title: 'Projects'
+          title: 'Projects | Paradise Labs'
         }
-      },
-      giscus: {
-        repository: 'louisescher/spectre',
-        repositoryId: 'R_kgDONjm3ig',
-        category: 'General',
-        categoryId: 'DIC_kwDONjm3is4ClmBF',
-        mapping: 'pathname',
-        strict: true,
-        reactionsEnabled: true,
-        emitMetadata: false,
-        lang: 'en',
-      }
+      } // Added missing closing brace
     })
   ],
   adapter: vercel()

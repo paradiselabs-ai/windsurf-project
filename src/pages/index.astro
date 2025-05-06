@@ -3,24 +3,34 @@ import '../styles/index.css';
 
 import Card from '../components/Card.astro';
 import Layout from '../layouts/Layout.astro';
-import ImageGlow from '../components/ImageGlow.astro';
 import Icon from '../components/Icon.astro';
-import { getCollection } from 'astro:content';
-import { getEntry } from 'astro:content';
-import { render } from 'astro:content';
+import { getCollection, getEntry, render } from 'astro:content';
 import { name, openGraph } from 'spectre:globals';
+import glueLogo from '@/assets/glue-logo.svg';
 
-const [posts, projects, about, workExperience, quickInfo, socials] = await Promise.all([
+const [posts, articles] = await Promise.all([
 	getCollection('posts', (post) => post.data.draft !== true),
-	getCollection('projects'),
-	getEntry('other', 'about'),
-	getCollection('workExperience'),
-	getCollection('quickInfo'),
-	getCollection('socials')
+	getCollection('articles'),
 ]);
 
-// biome-ignore lint/style/noNonNullAssertion: Should always be defined.
-const { Content: About } = await render(about!);
+// Sort articles to find the latest one
+const sortedArticles = articles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const latestArticle = sortedArticles.length > 0 ? sortedArticles[0] : null;
+
+// Render the latest article's content if it exists
+const { Content: LatestArticleContent } = latestArticle ? await render(latestArticle) : { Content: null };
+
+// Define Projects Data (Easily duplicatable)
+const projects = [
+	{
+		title: "GLUE Framework",
+		description: "An open-source framework for building agentic AI applications.",
+		url: "https://github.com/paradiselabs-ai", // Link to your main GH for now, update later if needed
+		logo: "@/assets/glue-logo.svg"
+	},
+	// To add more projects, copy the object above and paste it here, changing the details.
+];
+
 ---
 
 <Layout
@@ -29,41 +39,52 @@ const { Content: About } = await render(about!);
 	pagefindIgnore
 >
 	<div class="layout-grid-left" slot="left">
-		<Card class="flex-col-card">
-			<ImageGlow quality={100} width={80} height={80} src="/images/paradise-logo.jpg" alt="Louis looking out of a window" loading='eager' />
-			<h2>{name}</h2>
-			<ul class="overview-list">
-				{quickInfo.map((info) => (
-					<li>
-						<Icon type={info.data.icon.type} name={info.data.icon.name as any} width={24} height={24} class='glow-icon' />
-						<span>{info.data.text}</span>
-					</li>
-				))}
-			</ul>
-		</Card>
 		<Card>
-			<h3 class="no-mt">Socials</h3>
-			<ul class="overview-list">
-				{socials.map((item) => (
-					<li>
-						<a href={item.data.link} class="socials-link">
-							<Icon type={item.data.icon.type} name={item.data.icon.name as any} width={24} height={24} class='glow-icon' />
-							<span>{item.data.text}</span>
-						</a>
-					</li>
-				))}
-			</ul>
+			<h2 style="font-size: 1.8em; margin-top: 0; text-align: left;">{name}</h2>
+			<p style="margin-top: 0.5rem; margin-bottom: 1rem; text-align: left; font-size: 0.9em; color: var(--color-text-secondary);">Who we are, What we are doing, and what the future of AI looks like...</p>
+			<div class="social-icons" style="display: flex; gap: 25px; margin-top: 1rem;">
+				<a href="https://github.com/paradiselabs-ai" target="_blank" rel="noopener noreferrer" title="ParadiseLabs GitHub" style="color:var(--color-accent-cyan);">
+					<Icon type="lucide" name="github" width={22} height={22} style="vertical-align:middle;" />
+				</a>
+				<a href="https://twitter.com/paradiselabs_ai" target="_blank" rel="noopener noreferrer" title="ParadiseLabs Twitter" style="color:var(--color-accent-purple);">
+					<Icon type="lucide" name="twitter" width={22} height={22} style="vertical-align:middle;" />
+				</a>
+				<a href="https://discord.gg/uQ69vc4Agc" target="_blank" rel="noopener noreferrer" title="ParadiseLabs Discord" style="color:var(--color-accent-green);">
+					<img src="/images/discord.svg" width="22" height="22" style="vertical-align:middle;filter:drop-shadow(0 0 2px var(--color-bg-darkest));" alt="Discord" />
+				</a>
+			</div>
 		</Card>
 	</div>
 	<div class="layout-grid-right" slot="right">
+		{latestArticle && LatestArticleContent && (
+			<Card>
+				<div class="content-container article-preview">
+					<h3 class="no-mt">{latestArticle.data.title}</h3>
+					<div class="prose preview-content">
+						<LatestArticleContent />
+					</div>
+					<a href={`/articles/${latestArticle.id}`} class="continue-reading-link">Continue Reading →</a>
+				</div>
+			</Card>
+		)}
 		<Card>
-			<div class="header-container">
-				<Icon type='lucide' name="user" width={24} height={24} class='glow-icon' />
-				<h2>About me</h2>
-			</div>
-			<div class="prose">
-				<About />
-			</div>
+			<h2 class="no-mt">Projects</h2>
+			{projects.map(project => (
+				<Card style="margin-bottom: 1rem;">
+					<div style="display: flex; align-items: center; gap: 1rem;">
+						{project.logo === "@/assets/glue-logo.svg" && 
+							<img src={glueLogo.src} alt={`${project.title} Logo`} width="60" height="60" style="flex-shrink: 0;" />
+						}
+						{/* Add else if for other project logos later if needed */}
+						<div>
+							<h3 style="margin: 0; font-size: 1.2em;">
+								<a href={project.url} target="_blank" rel="noopener noreferrer">{project.title}</a>
+							</h3>
+							<p style="margin: 0.3rem 0 0 0; font-size: 0.9em; color: var(--color-text-secondary);">{project.description}</p>
+						</div>
+					</div>
+				</Card>
+			))}
 		</Card>
 		<Card>
 			<div class="header-container">
@@ -85,35 +106,35 @@ const { Content: About } = await render(about!);
 		<Card>
 			<div class="header-container">
 				<Icon type='lucide' name="folder-git" width={24} height={24} class='glow-icon' />
-				<h2>Latest Projects</h2>
+				<h2>Recent Articles</h2> {/* Maybe rename this list now? */}
 			</div>
 			<div class="content-container">
-				{projects.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).slice(0, 2).map((project) => (
-					<a href={`/projects/${project.id}`} class="post-container">
+				{sortedArticles.slice(0, 2).map((article) => ( /* Show latest two articles */
+					<a href={`/articles/${article.id}`} class="post-container">
 						<div class="post-header">
-							<h3>{project.data.title}</h3>
-							<span class="post-date">{project.data.date.toLocaleDateString()}</span>
+							<h3>{article.data.title}</h3>
+							<span class="post-date">{article.data.date.toLocaleDateString()}</span>
 						</div>
-						<span>{project.data.description}</span>
+						<span>{article.data.description}</span>
 					</a>
-				))}
-			</div>
-		</Card>
-		<Card>
-			<div class="header-container">
-				<Icon type='lucide' name="briefcase-business" width={24} height={24} class='glow-icon' />
-				<h2>Work Experience</h2>
-			</div>
-			<div class="work-experience-container">
-				{workExperience.reverse().map((entry) => (
-					<div class="work-experience-entry">
-						<span class="work-experience-duration">{entry.data.duration}</span>
-						<h3 class="work-experience-company">{entry.data.company}</h3>
-						<span class="work-experience-role">{entry.data.title}</span>
-						<p class="work-experience-desc">{entry.data.description}</p>
-					</div>
 				))}
 			</div>
 		</Card>
 	</div>
 </Layout>
+
+<style>
+	.article-preview .preview-content {
+		display: -webkit-box;
+		-webkit-line-clamp: 5; /* Show ~5 lines */
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		/* Optional: Add margin below the truncated content */
+		margin-bottom: 1rem;
+	}
+	.continue-reading-link {
+		/* Add styling for the link if needed */
+		display: inline-block;
+		margin-top: 0.5rem;
+	}
+</style>

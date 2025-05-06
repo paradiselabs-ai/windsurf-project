@@ -17,7 +17,7 @@ export default defineConfig({
     mdx(),
     sitemap(),
     spectre({
-      name: 'Paradise Labs',
+      name: 'ParadiseLabs',
       openGraph: {
         home: {
           title: 'Paradise Labs',
@@ -30,7 +30,7 @@ export default defineConfig({
         projects: {
           title: 'Projects | Paradise Labs'
         }
-      } // Added missing closing brace
+      }
     })
   ],
   adapter: vercel()

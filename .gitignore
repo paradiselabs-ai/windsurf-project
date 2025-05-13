@@ -25,6 +25,9 @@ docs/*
 .windsurfrules
 windsurf-project.code-workspace
 
+# Documentation files - not to be tracked
+docs/
+
 # macOS-specific files
 .DS_Store
 

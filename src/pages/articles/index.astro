@@ -1,0 +1,81 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Card from '../../components/Card.astro';
+import { getCollection } from 'astro:content';
+import { name } from 'spectre:globals';
+
+// Fetch all articles, sorted by date descending
+const articles = (await getCollection('articles')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<Layout title={`Articles | ${name}`} description="Browse all articles from ParadiseLabs.">
+  <div class="layout-grid-right" slot="right">
+    <Card>
+      <h1 class="no-mt">Articles</h1>
+      <p>Explore insights, tutorials, and discussions from ParadiseLabs.</p>
+      
+      {articles.length === 0 && (
+        <p>No articles found yet. Check back soon!</p>
+      )}
+
+      <ul class="article-list">
+        {articles.map((article) => (
+          <li>
+            <a href={`/articles/${article.id}`}>
+              <h2>{article.data.title}</h2>
+              <p><small>Published on: {article.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</small></p>
+              {article.data.description && <p>{article.data.description}</p>}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  </div>
+  
+  <div class="layout-grid-left" slot="left">
+    <!-- You can add a sidebar or other content here if desired -->
+    <Card>
+      <h4>Categories</h4>
+      <ul>
+        <li><a href="/articles">All Articles</a></li>
+        <li><a href="/blog">Blog Posts</a></li>
+        <!-- Add more categories or links as needed -->
+      </ul>
+    </Card>
+  </div>
+</Layout>
+
+<style>
+  .article-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  .article-list li {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1rem;
+  }
+  .article-list li:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  .article-list a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .article-list a:hover h2, .article-list a:focus h2 {
+    color: var(--color-accent-purple);
+  }
+  .article-list h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.5em;
+  }
+  .article-list p {
+    margin-bottom: 0.5rem;
+  }
+</style>

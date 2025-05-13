@@ -101,6 +101,7 @@ const projects = [
 						<span>{post.data.description}</span>
 					</a>
 				))}
+				<a href="/blog" class="view-all-link">View all posts →</a>
 			</div>
 		</Card>
 		<Card>
@@ -118,6 +119,7 @@ const projects = [
 						<span>{article.data.description}</span>
 					</a>
 				))}
+				<a href="/articles" class="view-all-link">View all articles →</a>
 			</div>
 		</Card>
 	</div>
@@ -136,5 +138,16 @@ const projects = [
 		/* Add styling for the link if needed */
 		display: inline-block;
 		margin-top: 0.5rem;
+	}
+	.view-all-link {
+		display: block;
+		text-align: right;
+		margin-top: 1rem;
+		font-size: 0.9em;
+		color: var(--color-accent-purple);
+		text-decoration: none;
+	}
+	.view-all-link:hover {
+		text-decoration: underline;
 	}
 </style>

@@ -32,9 +32,22 @@ const blogCollection = defineCollection({
   schema: sharedPostSchema, // Reusing the same schema for consistency
 });
 
+// Define the 'portfolio' collection (formerly 'projects')
+const portfolioCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(), // Only title for now
+    // description: z.string(),
+    // logo: z.string(), // Path to logo image
+    // externalUrl: z.string().url(),
+    // order: z.number().optional(), // Optional field for ordering projects
+  }),
+});
+
 // Export a 'collections' object
 export const collections = {
-  other: otherCollection,
-  articles: articlesCollection,
-  blog: blogCollection,
+  'other': otherCollection,
+  'articles': articlesCollection,
+  'blog': blogCollection,
+  'portfolio': portfolioCollection,
 };

@@ -1,0 +1,141 @@
+---
+import '../styles/article-list.css';
+
+import { getCollection } from "astro:content";
+import Card from "../components/Card.astro";
+import Icon from "../components/Icon.astro";
+import Layout from "../layouts/Layout.astro";
+import { openGraph } from 'spectre:globals';
+
+const articles = await getCollection('articles', (article) => article.data.draft !== true);
+const tags = articles.flatMap((article) => article.data.tags || []).filter(tag => typeof tag === 'string');
+
+---
+<Layout
+	title={openGraph.projects.title || "Articles"}
+	description={openGraph.projects.description || "Browse all articles"}
+	pagefindIgnore
+>
+  <div class="layout-grid-left" slot="left">
+    <Card class="flex-col-card">
+      <h2 class="no-mt">Filter by Tag</h2>
+      <ul class="tags-list">
+        {Array.from(new Set(tags)).map((tag) => (
+          <li>
+            <a
+              class="blog-tag"
+              href="#" 
+              data-tag={tag}
+            >
+              {tag}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </Card>
+  </div>
+  <div class="layout-grid-right" slot="right">
+    <Card>
+      <div class="header-container">
+        <Icon type="lucide" name="file-text" width={24} height={24} class='glow-icon' /> 
+        <h2>Latest Articles</h2>
+      </div>
+      <div class="content-container">
+        {articles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).map((article) => (
+          <a href={`/articles/${article.id}`} class="post-container" data-tags={article.data.tags?.join(",") || ""}> 
+            <div class="post-header">
+              <h3>{article.data.title}</h3>
+              <span class="post-date">{article.data.date.toLocaleDateString()}</span>
+            </div>
+            <span>{article.data.description}</span>
+          </a>
+        ))}
+      </div>
+    </Card>
+  </div>
+</Layout>
+<script>
+  const tags = document.querySelectorAll('.blog-tag'); 
+  const url = new URL(window.location.href);
+  const currentTags = url.searchParams.get('tags')?.split(',').filter((tag) => tag.length > 0);
+  const articles = document.querySelectorAll('.post-container'); 
+
+  tags.forEach((tag) => {
+    if (tag instanceof HTMLAnchorElement) {
+      let active = false;
+      if (currentTags?.includes(tag.dataset.tag)) {
+        tag.classList.add('active');
+        active = true;
+      }
+
+      let newTagsArray;
+      if (active) {
+        newTagsArray = currentTags.filter((t) => t !== tag.dataset.tag);
+      } else {
+        newTagsArray = currentTags.includes(tag.dataset.tag) ? currentTags : [...currentTags, tag.dataset.tag];
+      }
+      tag.href = `/articles${newTagsArray.length > 0 ? '?tags=' + newTagsArray.join(',') : ''}`;
+    }
+  });
+
+  articles.forEach((article) => {
+    const articleTags = article.dataset.tags?.split(',');
+    if (currentTags && currentTags.length > 0 && !currentTags.every((tag) => articleTags?.includes(tag))) {
+      article.style.display = 'none';
+    }
+  });
+</script>
+
+<style>
+  /* Styles from projects.astro - can be kept or removed if article-list.css covers it */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  .project-card {
+    background: var(--color-bg-dark);
+    border: 2px solid var(--color-divider);
+    border-radius: 12px;
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: border-color 0.2s;
+  }
+  .project-card:hover {
+    border-color: var(--color-accent-cyan);
+  }
+  .project-logo {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    background: var(--color-bg-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .project-card.placeholder .project-logo {
+    font-size: 2.5rem;
+    color: var(--color-accent-green);
+    background: var(--color-bg-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .project-link {
+    margin-top: 1rem;
+    color: var(--color-link);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: color 0.2s;
+  }
+  .project-link:hover {
+    color: var(--color-accent-purple);
+  }
+  /* Ensure styles from article-list.css or blog.astro are available for tags-list, blog-tag etc. */
+</style>

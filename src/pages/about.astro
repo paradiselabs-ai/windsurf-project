@@ -1,19 +1,44 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { getEntry, render } from 'astro:content';
-import { name, openGraph } from 'spectre:globals';
 
 const aboutEntry = await getEntry('other', 'about');
-// biome-ignore lint/style/noNonNullAssertion: Should always be defined.
-const { Content: AboutContent } = await render(aboutEntry!); 
+console.log('About entry from about.astro (for direct render test):', aboutEntry);
+
+let pageTitle = "About Us";
+let pageDescription = "Learn more about our mission and team.";
+let ContentComponent = null;
+
+if (aboutEntry && aboutEntry.data) {
+  pageTitle = aboutEntry.data.title || pageTitle;
+  const { Content } = await render(aboutEntry);
+  ContentComponent = Content;
+} else {
+  console.error("ERROR: Could not load content for 'about' page. Check 'src/content/other/about.md'.");
+}
 ---
 
-<Layout 
-  title={`About | ${name}`}
-  description={openGraph.home.description || 'About Paradise Labs'}
->
-  <h1>About Us</h1>
-  <div class="prose">
-    <AboutContent />
+<Layout title={pageTitle} description={pageDescription}>
+  <div slot="left" class="prose lg:prose-xl dark:prose-invert max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <article>
+      <h1>{pageTitle}</h1>
+      
+      {ContentComponent ? (
+        <ContentComponent />
+      ) : (
+        <>
+          <p>The content for this page could not be loaded. Please ensure the file `src/content/other/about.md` exists and is correctly formatted.</p>
+          <p>If you are the site administrator, check the server console logs for more details.</p>
+        </>
+      )}
+    </article>
   </div>
 </Layout>
+
+<style>
+  article h1 {
+    font-size: 2.5em;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+  }
+</style>

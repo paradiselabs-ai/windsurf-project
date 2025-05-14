@@ -11,8 +11,10 @@ import glueLogoSrc from '@/assets/glue-logo.svg';
 const [posts, articles, projectsEntry] = await Promise.all([
 	getCollection('posts', (post) => post.data.draft !== true),
 	getCollection('articles'),
-  getEntry('projects'), // Fetch the single data entry 'projects.json'
+  getEntry('projects', 'projects'), // Fetch the single data entry 'projects.json'
 ]);
+
+console.log('--- projectsEntry ---', JSON.stringify(projectsEntry, null, 2));
 
 // projectsEntry.data will contain the array from projects.json
 const projectsArray = projectsEntry && projectsEntry.data ? projectsEntry.data : [];

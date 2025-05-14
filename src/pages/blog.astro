@@ -123,23 +123,41 @@ if (Astro.request.method === 'POST') {
   tags.forEach((tag) => {
     if (tag instanceof HTMLAnchorElement) {
       let active = false;
-      if (currentTags?.includes(tag.dataset.tag)) {
+      const tagValue = tag.dataset.tag;
+      if (tagValue && currentTags?.includes(tagValue)) {
         tag.classList.add('active');
         active = true;
       }
 
+      // Create new URLSearchParams for link construction
+      const newParams = new URLSearchParams(url.search);
       if (active) {
-        tag.href = `/blog?tags=${currentTags?.filter((t) => t !== tag.dataset.tag).join(',')}`;
-      } else {
-        tag.href = `/blog?tags=${currentTags ? [...currentTags, tag.dataset.tag].join(',') : tag.dataset.tag}`;
+        // Remove tag if active (toggle off)
+        const updatedTags = currentTags?.filter(t => t !== tagValue) || [];
+        if (updatedTags.length > 0) {
+          newParams.set('tags', updatedTags.join(','));
+        } else {
+          newParams.delete('tags');
+        }
+      } else if (tagValue) { // Only add tag if tagValue is defined
+        // Add tag if not active (toggle on)
+        const updatedTags = [...(currentTags || []), tagValue];
+        newParams.set('tags', updatedTags.join(','));
       }
+      tag.href = `/blog?${newParams.toString()}`;
     }
   });
 
+  // Filter posts based on current tags
   posts.forEach((post) => {
-    const postTags = post.dataset.tags?.split(',');
-    if (currentTags && currentTags.length > 0 && !currentTags.every((tag) => postTags.includes(tag))) {
-      post.style.display = 'none';
+    if (post instanceof HTMLElement) {
+      const postTagsString = post.dataset.tags;
+      const postTags = postTagsString ? postTagsString.split(',') : [];
+      if (currentTags && currentTags.length > 0 && !currentTags.every((tag) => postTags.includes(tag))) {
+        post.style.display = 'none';
+      } else {
+        post.style.display = '';
+      }
     }
   });
 </script>

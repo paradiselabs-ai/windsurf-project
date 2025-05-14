@@ -1,0 +1,111 @@
+---
+import '../styles/article-list.css'; // Assuming this CSS is general enough
+
+import { getCollection } from "astro:content";
+import Card from "../components/Card.astro";
+import Icon from "../components/Icon.astro";
+import Layout from "../layouts/Layout.astro";
+import { openGraph, name as siteName } from 'spectre:globals'; // Assuming 'name' is siteName from spectre
+
+const articles = await getCollection('articles', (article) => article.data.draft !== true);
+
+// Assuming article tags are stored as an array of strings in article.data.tags
+// If tags are objects like { id: 'tagname', name: 'TagName' }, adjust accordingly
+const tags = articles.flatMap((article) => article.data.tags || []).filter(tag => typeof tag === 'string');
+
+---
+<Layout
+  title={openGraph.articles?.title || "Articles"} // Check if openGraph has an articles specific section
+  description={openGraph.articles?.description || "Browse all articles"}
+  pagefindIgnore // Keep this if you don't want this page indexed by pagefind
+>
+  <div class="layout-grid-left" slot="left">
+    <Card class="flex-col-card">
+      <h2 class="no-mt">Filter by Tag</h2>
+      <ul class="tags-list">
+        {Array.from(new Set(tags)).map((tag) => (
+          <li>
+            <a
+              class="blog-tag" 
+              href={`/articles?tags=${encodeURIComponent(tag)}`} // Simple href, can be enhanced by script
+              data-tag={tag}
+            >
+              {tag}
+            </a>
+          </li>
+        ))}
+        {tags.length === 0 && <li>No tags found.</li>}
+      </ul>
+    </Card>
+  </div>
+  <div class="layout-grid-right" slot="right">
+    <Card>
+      <div class="header-container">
+        {/* Using a generic document icon, change if there's a better one for articles */}
+        <Icon type="lucide" name="files" width={24} height={24} class='glow-icon' /> 
+        <h2>Latest Articles</h2>
+      </div>
+      <div class="content-container">
+        {articles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).map((article) => (
+          <a href={`/articles/${article.id}`} class="post-container" data-tags={(article.data.tags || []).join(",")}> 
+            <div class="post-header">
+              <h3>{article.data.title}</h3>
+              <span class="post-date">{article.data.date.toLocaleDateString()}</span>
+            </div>
+            <span>{article.data.description}</span>
+          </a>
+        ))}
+        {articles.length === 0 && <p>No articles found yet.</p>}
+      </div>
+    </Card>
+  </div>
+</Layout>
+<script>
+  // Script for client-side tag filtering (adapted from blog.astro)
+  const tags = document.querySelectorAll('.blog-tag');
+  const url = new URL(window.location.href);
+  const currentTags = url.searchParams.get('tags')?.split(',').filter((tag) => tag.length > 0) || [];
+  const articles = document.querySelectorAll('.post-container');
+
+  // Set initial active state for tags and adjust hrefs
+  tags.forEach((tagElement) => {
+    if (tagElement instanceof HTMLAnchorElement) {
+      const tagValue = tagElement.dataset.tag;
+      let active = false;
+      if (tagValue && currentTags.includes(tagValue)) {
+        tagElement.classList.add('active');
+        active = true;
+      }
+
+      // Create new URLSearchParams for link construction
+      const newParams = new URLSearchParams(url.search);
+      if (active) {
+        // Remove tag if active (toggle off)
+        const updatedTags = currentTags.filter(t => t !== tagValue);
+        if (updatedTags.length > 0) {
+          newParams.set('tags', updatedTags.join(','));
+        } else {
+          newParams.delete('tags');
+        }
+      } else if (tagValue) { // Only add tag if tagValue is defined
+        // Add tag if not active (toggle on)
+        const updatedTags = [...currentTags, tagValue];
+        newParams.set('tags', updatedTags.join(','));
+      }
+      tagElement.href = `/articles?${newParams.toString()}`;
+    }
+  });
+
+  // Filter articles based on current tags
+  articles.forEach((articleElement) => {
+    if (articleElement instanceof HTMLElement) { // Ensure it's an HTMLElement for dataset
+      const articleTagsString = articleElement.dataset.tags;
+      const articleTags = articleTagsString ? articleTagsString.split(',') : [];
+      if (currentTags.length > 0 && !currentTags.every((tag) => articleTags.includes(tag))) {
+        articleElement.style.display = 'none';
+      } else {
+        articleElement.style.display = ''; // Ensure it's visible if not filtered
+      }
+    }
+  });
+</script>

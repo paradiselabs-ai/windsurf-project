@@ -6,12 +6,16 @@ import Layout from '../layouts/Layout.astro';
 import Icon from '../components/Icon.astro';
 import { getCollection, getEntry, render } from 'astro:content';
 import { name, openGraph } from 'spectre:globals';
-import glueLogo from '@/assets/glue-logo.svg';
+import glueLogoSrc from '@/assets/glue-logo.svg';
 
-const [posts, articles] = await Promise.all([
+const [posts, articles, projectsEntry] = await Promise.all([
 	getCollection('posts', (post) => post.data.draft !== true),
 	getCollection('articles'),
+  getEntry('projects'), // Fetch the single data entry 'projects.json'
 ]);
+
+// projectsEntry.data will contain the array from projects.json
+const projectsArray = projectsEntry && projectsEntry.data ? projectsEntry.data : [];
 
 // Sort articles to find the latest one
 const sortedArticles = articles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
@@ -20,16 +24,8 @@ const latestArticle = sortedArticles.length > 0 ? sortedArticles[0] : null;
 // Render the latest article's content if it exists
 const { Content: LatestArticleContent } = latestArticle ? await render(latestArticle) : { Content: null };
 
-// Define Projects Data (Easily duplicatable)
-const projects = [
-	{
-		title: "GLUE Framework",
-		description: "An open-source framework for building agentic AI applications.",
-		url: "https://github.com/paradiselabs-ai", // Link to your main GH for now, update later if needed
-		logo: "@/assets/glue-logo.svg"
-	},
-	// To add more projects, copy the object above and paste it here, changing the details.
-];
+// Use the array directly from projects.json
+const sortedProjects = projectsArray;
 
 ---
 
@@ -54,6 +50,35 @@ const projects = [
 				</a>
 			</div>
 		</Card>
+		<Card>
+			<h2 class="no-mt">Projects</h2>
+			{sortedProjects.map(project => { // project is now an item from projectsArray
+        let logoSrcPath; 
+        if (project.logoIdentifier === "glue") { // Check the identifier
+          logoSrcPath = glueLogoSrc.src; 
+        }
+        // Add else-if blocks here for other project logo identifiers
+
+        return (
+          <Card style="margin-bottom: 1rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              {logoSrcPath && 
+                <img src={logoSrcPath} alt={`${project.title} Logo`} width="60" height="60" style="flex-shrink: 0;" />
+              }
+              <div>
+                <h3 style="margin: 0; font-size: 1.2em;">
+                  <a href={project.url} target="_blank" rel="noopener noreferrer">{project.title}</a>
+                </h3>
+                {project.description && 
+                  <p style="margin: 0.3rem 0 0 0; font-size: 0.9em; color: var(--color-text-secondary);">{project.description}</p>
+                }
+              </div>
+            </div>
+          </Card>
+        );
+      })}
+			{sortedProjects.length === 0 && <p>No projects to display yet.</p>}
+		</Card>
 	</div>
 	<div class="layout-grid-right" slot="right">
 		{latestArticle && LatestArticleContent && (
@@ -67,25 +92,6 @@ const projects = [
 				</div>
 			</Card>
 		)}
-		<Card>
-			<h2 class="no-mt">Projects</h2>
-			{projects.map(project => (
-				<Card style="margin-bottom: 1rem;">
-					<div style="display: flex; align-items: center; gap: 1rem;">
-						{project.logo === "@/assets/glue-logo.svg" && 
-							<img src={glueLogo.src} alt={`${project.title} Logo`} width="60" height="60" style="flex-shrink: 0;" />
-						}
-						{/* Add else if for other project logos later if needed */}
-						<div>
-							<h3 style="margin: 0; font-size: 1.2em;">
-								<a href={project.url} target="_blank" rel="noopener noreferrer">{project.title}</a>
-							</h3>
-							<p style="margin: 0.3rem 0 0 0; font-size: 0.9em; color: var(--color-text-secondary);">{project.description}</p>
-						</div>
-					</div>
-				</Card>
-			))}
-		</Card>
 		<Card>
 			<div class="header-container">
 				<Icon type='lucide' name="rss" width={24} height={24} class='glow-icon' />
@@ -107,10 +113,10 @@ const projects = [
 		<Card>
 			<div class="header-container">
 				<Icon type='lucide' name="folder-git" width={24} height={24} class='glow-icon' />
-				<h2>Recent Articles</h2> {/* Maybe rename this list now? */}
+				<h2>Recent Articles</h2> 
 			</div>
 			<div class="content-container">
-				{sortedArticles.slice(0, 2).map((article) => ( /* Show latest two articles */
+				{sortedArticles.slice(0, 2).map((article) => ( 
 					<a href={`/articles/${article.id}`} class="post-container">
 						<div class="post-header">
 							<h3>{article.data.title}</h3>
@@ -128,14 +134,12 @@ const projects = [
 <style>
 	.article-preview .preview-content {
 		display: -webkit-box;
-		-webkit-line-clamp: 5; /* Show ~5 lines */
+		-webkit-line-clamp: 5; 
 		-webkit-box-orient: vertical;
 		overflow: hidden;
-		/* Optional: Add margin below the truncated content */
 		margin-bottom: 1rem;
 	}
 	.continue-reading-link {
-		/* Add styling for the link if needed */
 		display: inline-block;
 		margin-top: 0.5rem;
 	}

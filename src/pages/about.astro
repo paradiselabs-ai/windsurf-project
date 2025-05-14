@@ -4,16 +4,33 @@ import { getEntry, render } from 'astro:content';
 import { name, openGraph } from 'spectre:globals';
 
 const aboutEntry = await getEntry('other', 'about');
-// biome-ignore lint/style/noNonNullAssertion: Should always be defined.
-const { Content: AboutContent } = await render(aboutEntry!); 
+console.log('About Entry:', aboutEntry); // Log for debugging
+
+let AboutContent = null;
+if (aboutEntry) {
+  const { Content } = await render(aboutEntry);
+  AboutContent = Content;
+}
 ---
 
 <Layout 
   title={`About | ${name}`}
   description={openGraph.home.description || 'About Paradise Labs'}
 >
-  <h1>About Us</h1>
-  <div class="prose">
-    <AboutContent />
-  </div>
+  {aboutEntry && AboutContent ? (
+    <>
+      <h1>{aboutEntry.data.title}</h1> {/* Use title from frontmatter */}
+      <div class="prose">
+        <AboutContent />
+      </div>
+    </>
+  ) : (
+    <>
+      <h1>About Page Not Found</h1>
+      <p>The content for the about page could not be loaded. Please check the logs.</p>
+      <p>Attempted to load: 'other' collection, 'about' slug.</p>
+      {/* Displaying the raw entry for further debugging if needed */}
+      <pre>Debug: aboutEntry was {JSON.stringify(aboutEntry, null, 2)}</pre>
+    </>
+  )}
 </Layout>

@@ -32,9 +32,24 @@ const blogCollection = defineCollection({
   schema: sharedPostSchema, // Reusing the same schema for consistency
 });
 
+// Define the 'projects' collection
+const projectsCollection = defineCollection({
+  type: 'data', // Set to 'data' as projects are defined in projects.json
+  schema: z.array( // Expect an array of projects
+    z.object({
+      title: z.string(),
+      description: z.string().optional(),
+      logoIdentifier: z.string().optional(), // Using an identifier for the logo
+      url: z.string(), // External URL for the project
+      // order: z.number().optional(), // Add back if ordering by number is desired
+    })
+  ),
+});
+
 // Export a 'collections' object
 export const collections = {
   other: otherCollection,
   articles: articlesCollection,
   blog: blogCollection,
+  projects: projectsCollection,
 };

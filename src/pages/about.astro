@@ -1,27 +1,26 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getEntry, render } from 'astro:content';
+import { getEntry } from 'astro:content';
 import { name, openGraph } from 'spectre:globals';
 
 const aboutEntry = await getEntry('other', 'about');
 console.log('About Entry:', aboutEntry); // Log for debugging
-
-let AboutContent = null;
-if (aboutEntry) {
-  const { Content } = await render(aboutEntry);
-  AboutContent = Content;
-}
 ---
 
 <Layout 
   title={`About | ${name}`}
   description={openGraph.home.description || 'About Paradise Labs'}
 >
-  {aboutEntry && AboutContent ? (
+  {aboutEntry ? (
     <>
-      <h1>{aboutEntry.data.title}</h1> {/* Use title from frontmatter */}
+      <h1>{aboutEntry.data.title}</h1>
       <div class="prose">
-        <AboutContent />
+        {/* Render the content sections directly from the JSON structure */}
+        <div set:html={aboutEntry.data.content.intro} />
+        <div set:html={aboutEntry.data.content.mission} />
+        <div set:html={aboutEntry.data.content.vision} />
+        <div set:html={aboutEntry.data.content.values} />
+        <div set:html={aboutEntry.data.content.closing} />
       </div>
     </>
   ) : (

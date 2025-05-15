@@ -1,14 +1,5 @@
 import { defineCollection, z } from 'astro:content';
 
-// Define the 'other' collection
-const otherCollection = defineCollection({
-  type: 'content',
-  schema: z.object({
-    title: z.string(),
-    date: z.date().optional(),
-  }),
-});
-
 // Define a common schema for blog posts and articles
 const sharedPostSchema = z.object({
   title: z.string(),
@@ -23,7 +14,18 @@ const sharedPostSchema = z.object({
 // Define the 'articles' collection
 const articlesCollection = defineCollection({
   type: 'content',
-  schema: sharedPostSchema,
+  schema: sharedPostSchema.extend({
+    // Add topics field specifically for articles
+    topics: z.array(
+      z.union([
+        z.string(),
+        z.object({
+          id: z.string(),
+          name: z.string().optional()
+        })
+      ])
+    ).optional(),
+  }),
 });
 
 // Define the 'blog' collection
@@ -33,15 +35,15 @@ const blogCollection = defineCollection({
 });
 
 // Define the 'projects' collection
-const projectsCollection = defineCollection({
+const otherCollection = defineCollection({
   type: 'data', // Set to 'data' as projects are defined in projects.json
   schema: z.array( // Expect an array of projects
     z.object({
       title: z.string(),
       description: z.string().optional(),
-      logoIdentifier: z.string().optional(), // Using an identifier for the logo
+      logo: z.string().optional(), // Path to the logo image (relative to /public/images/projects/)
       url: z.string(), // External URL for the project
-      // order: z.number().optional(), // Add back if ordering by number is desired
+      order: z.number().optional(), // Optional ordering for projects
     })
   ),
 });
@@ -51,5 +53,4 @@ export const collections = {
   other: otherCollection,
   articles: articlesCollection,
   blog: blogCollection,
-  projects: projectsCollection,
 };

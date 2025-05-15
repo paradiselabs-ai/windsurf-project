@@ -4,20 +4,21 @@ import '../styles/index.css';
 import Card from '../components/Card.astro';
 import Layout from '../layouts/Layout.astro';
 import Icon from '../components/Icon.astro';
-import { getCollection, getEntry, render } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import { name, openGraph } from 'spectre:globals';
-import glueLogoSrc from '@/assets/glue-logo.svg';
+// No need to import individual logos anymore
 
-const [posts, articles, projectsEntry] = await Promise.all([
+const [posts, articles, otherCollection] = await Promise.all([
 	getCollection('posts', (post) => post.data.draft !== true),
 	getCollection('articles'),
-  getEntry('projects', 'projects'), // Fetch the single data entry 'projects.json'
+    getCollection('other'), // Get all entries in the 'other' collection, which includes projects
 ]);
 
-console.log('--- projectsEntry ---', JSON.stringify(projectsEntry, null, 2));
+// For data collections, we need to find the entry with id 'projects'
+const projectsEntry = otherCollection.find(entry => entry.id === 'projects');
 
-// projectsEntry.data will contain the array from projects.json
-const projectsArray = projectsEntry && projectsEntry.data ? projectsEntry.data : [];
+// Extract projects from the entry
+const projects = projectsEntry ? projectsEntry.data : [];
 
 // Sort articles to find the latest one
 const sortedArticles = articles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
@@ -25,9 +26,6 @@ const latestArticle = sortedArticles.length > 0 ? sortedArticles[0] : null;
 
 // Render the latest article's content if it exists
 const { Content: LatestArticleContent } = latestArticle ? await render(latestArticle) : { Content: null };
-
-// Use the array directly from projects.json
-const sortedProjects = projectsArray;
 
 ---
 
@@ -54,32 +52,39 @@ const sortedProjects = projectsArray;
 		</Card>
 		<Card>
 			<h2 class="no-mt">Projects</h2>
-			{sortedProjects.map(project => { // project is now an item from projectsArray
-        let logoSrcPath; 
-        if (project.logoIdentifier === "glue") { // Check the identifier
-          logoSrcPath = glueLogoSrc.src; 
-        }
-        // Add else-if blocks here for other project logo identifiers
-
-        return (
-          <Card style="margin-bottom: 1rem;">
-            <div style="display: flex; align-items: center; gap: 1rem;">
-              {logoSrcPath && 
-                <img src={logoSrcPath} alt={`${project.title} Logo`} width="60" height="60" style="flex-shrink: 0;" />
-              }
-              <div>
-                <h3 style="margin: 0; font-size: 1.2em;">
-                  <a href={project.url} target="_blank" rel="noopener noreferrer">{project.title}</a>
-                </h3>
-                {project.description && 
-                  <p style="margin: 0.3rem 0 0 0; font-size: 0.9em; color: var(--color-text-secondary);">{project.description}</p>
-                }
-              </div>
-            </div>
-          </Card>
-        );
-      })}
-			{sortedProjects.length === 0 && <p>No projects to display yet.</p>}
+			{/* Sort projects by order if available */}
+			{projects
+				.sort((a: { order?: number }, b: { order?: number }) => (a.order || 999) - (b.order || 999))
+				.map((project: { 
+					title: string; 
+					description?: string; 
+					logo?: string; 
+					url: string; 
+					order?: number 
+				}) => {
+					// Construct logo path from the project's logo property
+					const logoPath = project.logo ? `/images/projects/${project.logo}` : null;
+					
+					return (
+						<Card style="margin-bottom: 1rem;">
+							<div style="display: flex; align-items: center; gap: 1rem;">
+								{logoPath && 
+									<img src={logoPath} alt={`${project.title} Logo`} width="60" height="60" style="flex-shrink: 0;" />
+								}
+								<div>
+									<h3 style="margin: 0; font-size: 1.2em;">
+										<a href={project.url} target="_blank" rel="noopener noreferrer">{project.title}</a>
+									</h3>
+									{project.description && 
+										<p style="margin: 0.3rem 0 0 0; font-size: 0.9em; color: var(--color-text-secondary);">{project.description}</p>
+									}
+								</div>
+							</div>
+						</Card>
+					);
+				})
+			}
+			{projects.length === 0 && <p>No projects to display yet.</p>}
 		</Card>
 	</div>
 	<div class="layout-grid-right" slot="right">

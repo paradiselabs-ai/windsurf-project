@@ -2,15 +2,14 @@
 title: "Understanding Transformers in Plain English"
 date: 2025-04-25
 description: "A practical, founder-friendly explanation of transformer models."
-info:
-  - text: "Topic"
-    icon:
-      type: "lucide"
-      name: "brain-circuit"
-  - text: "Est. Read Time"
-    icon:
-      type: "lucide"
-      name: "clock"
+topics:
+  - id: "ai"
+    name: "AI"
+  - id: "transformers"
+    name: "Transformers"
+  - id: "machine-learning"
+    name: "Machine Learning"
+draft: false
 ---
 
 # Understanding Transformers in Plain English

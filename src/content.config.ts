@@ -6,6 +6,11 @@ type SimpleIconsType = typeof simpleIconsData;
 
 const other = defineCollection({
   loader: glob({ base: "src/content/other", pattern: "**/*.{md,mdx}" }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),
+    description: z.string().optional()
+  })
 });
 
 const lucideIconSchema = z.object({
@@ -77,14 +82,7 @@ const articles = defineCollection({
     description: z.string(),
     date: z.coerce.date(),
     image: image().optional(),
-    link: z.string().url().optional(),
-    info: z.array(
-      z.object({
-        text: z.string(),
-        icon: z.union([lucideIconSchema, simpleIconSchema]),
-        link: z.string().url().optional(),
-      })
-    )
+    link: z.string().url().optional()
   })
 });
 

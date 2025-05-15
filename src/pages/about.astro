@@ -2,39 +2,36 @@
 import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import { name, openGraph } from 'spectre:globals';
+import Card from '../components/Card.astro';
 
 // Get the about entry from the 'other' collection
 const otherEntries = await getCollection('other');
 const aboutEntry = otherEntries.find(entry => entry.id === 'about');
 
-// Render the content if the entry exists
-let Content;
-if (aboutEntry) {
-  // Use the correct approach to get the content
-  // TypeScript may show an error, but this should work at runtime
-  const rendered = await aboutEntry.render();
-  Content = rendered.Content;
-}
+// Import the content directly
+import { Content as AboutContent } from '../content/other/about.md';
+
+// AboutContent is already imported above
 ---
 
 <Layout 
   title={`About | ${name}`}
   description={openGraph.home.description || 'About Paradise Labs'}
 >
-  {aboutEntry ? (
-    <div class="container">
-      <h1>{aboutEntry.data.title}</h1>
+  <div class="layout-grid-left" slot="left">
+    <Card>
+      <h2 style="font-size: 1.8em; margin-top: 0; text-align: left;">About</h2>
+      <p style="margin-top: 0.5rem; margin-bottom: 1rem; text-align: left; font-size: 0.9em; color: var(--color-text-secondary);">Learn more about ParadiseLabs and our mission</p>
+    </Card>
+  </div>
+  
+  <div class="layout-grid-right" slot="right">
+    <Card>
       <div class="prose">
-        <Content />
+        <AboutContent />
       </div>
-    </div>
-  ) : (
-    <div class="container">
-      <h1>About Page Not Found</h1>
-      <p>The content for the about page could not be loaded. Please check the logs.</p>
-      <p>Attempted to load: 'other' collection, 'about' slug.</p>
-    </div>
-  )}
+    </Card>
+  </div>
 </Layout>
 
 <style>

@@ -1,6 +1,7 @@
 ---
 title: "About"
 date: 2025-04-25
+description: "About ParadiseLabs, our mission, vision, and values"
 ---
 
 ## About ParadiseLabs

@@ -13,15 +13,21 @@ const [posts, articles] = await Promise.all([
 	getCollection('articles'),
 ]);
 
-// Hardcode projects data directly in the template
+// Define projects data directly in the template (similar to how ParadiseLabs card is implemented)
 const projects = [
   {
     title: "GLUE Framework",
     description: "An open-source framework for building agentic AI applications.",
     logo: "glue-logo.svg",
-    url: "https://github.com/paradiselabs-ai/GLUE-fw",
-    order: 1
+    url: "https://github.com/paradiselabs-ai/GLUE-fw"
   }
+  // Add more projects here as needed
+  // {
+  //   title: "Project Name",
+  //   description: "Project description goes here.",
+  //   logo: "project-logo.svg", // Place logo in public/images/projects/
+  //   url: "https://project-url.com"
+  // }
 ];
 
 // Sort articles to find the latest one
@@ -55,39 +61,34 @@ const { Content: LatestArticleContent } = latestArticle ? await render(latestArt
 			</div>
 		</Card>
 		<Card>
-			<h2 class="no-mt">Projects</h2>
-			{/* Sort projects by order if available */}
-			{projects
-				.sort((a: { order?: number }, b: { order?: number }) => (a.order || 999) - (b.order || 999))
-				.map((project: { 
-					title: string; 
-					description?: string; 
-					logo?: string; 
-					url: string; 
-					order?: number 
-				}) => {
-					// Construct logo path from the project's logo property
-					const logoPath = project.logo ? `/images/projects/${project.logo}` : null;
-					
-					return (
-						<Card style="margin-bottom: 1rem;">
-							<div style="display: flex; align-items: center; gap: 1rem;">
-								{logoPath && 
-									<img src={logoPath} alt={`${project.title} Logo`} width="60" height="60" style="flex-shrink: 0;" />
+			<h2 style="font-size: 1.8em; margin-top: 0; text-align: left;">Projects</h2>
+			{projects.map((project: { 
+				title: string; 
+				description?: string; 
+				logo?: string; 
+				url: string;
+			}) => {
+				// Construct logo path from the project's logo property
+				const logoPath = project.logo ? `/images/projects/${project.logo}` : null;
+				
+				return (
+					<div style="margin-top: 1.5rem;">
+						<div style="display: flex; align-items: center; gap: 1rem;">
+							{logoPath && 
+								<img src={logoPath} alt={`${project.title} Logo`} width="60" height="60" style="flex-shrink: 0;" />
+							}
+							<div>
+								<h3 style="margin: 0; font-size: 1.2em;">
+									<a href={project.url} target="_blank" rel="noopener noreferrer">{project.title}</a>
+								</h3>
+								{project.description && 
+									<p style="margin: 0.3rem 0 0 0; font-size: 0.9em; color: var(--color-text-secondary);">{project.description}</p>
 								}
-								<div>
-									<h3 style="margin: 0; font-size: 1.2em;">
-										<a href={project.url} target="_blank" rel="noopener noreferrer">{project.title}</a>
-									</h3>
-									{project.description && 
-										<p style="margin: 0.3rem 0 0 0; font-size: 0.9em; color: var(--color-text-secondary);">{project.description}</p>
-									}
-								</div>
 							</div>
-						</Card>
-					);
-				})
-			}
+						</div>
+					</div>
+				);
+			})}
 			{projects.length === 0 && <p>No projects to display yet.</p>}
 		</Card>
 	</div>

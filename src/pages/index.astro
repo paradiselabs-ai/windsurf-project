@@ -8,17 +8,21 @@ import { getCollection, render } from 'astro:content';
 import { name, openGraph } from 'spectre:globals';
 // No need to import individual logos anymore
 
-const [posts, articles, otherCollection] = await Promise.all([
+const [posts, articles] = await Promise.all([
 	getCollection('posts', (post) => post.data.draft !== true),
 	getCollection('articles'),
-    getCollection('other'), // Get all entries in the 'other' collection, which includes projects
 ]);
 
-// For data collections, we need to find the entry with id 'projects'
-const projectsEntry = otherCollection.find(entry => entry.id === 'projects');
-
-// Extract projects from the entry
-const projects = projectsEntry ? projectsEntry.data : [];
+// Hardcode projects data directly in the template
+const projects = [
+  {
+    title: "GLUE Framework",
+    description: "An open-source framework for building agentic AI applications.",
+    logo: "glue-logo.svg",
+    url: "https://github.com/paradiselabs-ai/GLUE-fw",
+    order: 1
+  }
+];
 
 // Sort articles to find the latest one
 const sortedArticles = articles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());

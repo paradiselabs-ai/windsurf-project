@@ -1,10 +1,20 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 import { name, openGraph } from 'spectre:globals';
 
-const aboutEntry = await getEntry('other', 'about');
-console.log('About Entry:', aboutEntry); // Log for debugging
+// Get the about entry from the 'other' collection
+const otherEntries = await getCollection('other');
+const aboutEntry = otherEntries.find(entry => entry.id === 'about');
+
+// Render the content if the entry exists
+let Content;
+if (aboutEntry) {
+  // Use the correct approach to get the content
+  // TypeScript may show an error, but this should work at runtime
+  const rendered = await aboutEntry.render();
+  Content = rendered.Content;
+}
 ---
 
 <Layout 
@@ -12,24 +22,28 @@ console.log('About Entry:', aboutEntry); // Log for debugging
   description={openGraph.home.description || 'About Paradise Labs'}
 >
   {aboutEntry ? (
-    <>
+    <div class="container">
       <h1>{aboutEntry.data.title}</h1>
       <div class="prose">
-        {/* Render the content sections directly from the JSON structure */}
-        <div set:html={aboutEntry.data.content.intro} />
-        <div set:html={aboutEntry.data.content.mission} />
-        <div set:html={aboutEntry.data.content.vision} />
-        <div set:html={aboutEntry.data.content.values} />
-        <div set:html={aboutEntry.data.content.closing} />
+        <Content />
       </div>
-    </>
+    </div>
   ) : (
-    <>
+    <div class="container">
       <h1>About Page Not Found</h1>
       <p>The content for the about page could not be loaded. Please check the logs.</p>
       <p>Attempted to load: 'other' collection, 'about' slug.</p>
-      {/* Displaying the raw entry for further debugging if needed */}
-      <pre>Debug: aboutEntry was {JSON.stringify(aboutEntry, null, 2)}</pre>
-    </>
+    </div>
   )}
 </Layout>
+
+<style>
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  .prose {
+    line-height: 1.6;
+  }
+</style>

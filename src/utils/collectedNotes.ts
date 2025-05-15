@@ -14,6 +14,7 @@ export interface CollectedNote {
 export async function fetchCollectedNotesPrivate(): Promise<CollectedNote[]> {
   const email = import.meta.env.COLLECTEDNOTES_EMAIL;
   const token = import.meta.env.COLLECTEDNOTES_TOKEN;
+  const site_path = import.meta.env.SITE_PATH;
   if (!email || !token) throw new Error('Missing COLLECTEDNOTES_EMAIL or COLLECTEDNOTES_TOKEN environment variables');
   const res = await fetch('https://collectednotes.com/api/notes', {
     headers: {

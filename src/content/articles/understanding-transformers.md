@@ -1,15 +1,10 @@
 ---
 title: "Understanding Transformers in Plain English"
-date: 2025-04-25
+date: 2025-04-25T00:00:00Z
 description: "A practical, founder-friendly explanation of transformer models."
-topics:
-  - id: "ai"
-    name: "AI"
-  - id: "transformers"
-    name: "Transformers"
-  - id: "machine-learning"
-    name: "Machine Learning"
+topics: ["ai", "transformers", "machine-learning"]
 draft: false
+image: ""
 ---
 
 # Understanding Transformers in Plain English

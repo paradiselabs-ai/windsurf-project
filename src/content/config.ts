@@ -1,56 +1,40 @@
 import { defineCollection, z } from 'astro:content';
 
-// Define a common schema for blog posts and articles
-const sharedPostSchema = z.object({
+// Define a simple schema for markdown content
+const markdownSchema = z.object({
   title: z.string(),
+  date: z.coerce.date(),
   description: z.string().optional(),
-  date: z.date(),
-  updatedDate: z.date().optional(),
-  image: z.string().optional(), // Or z.object if using image metadata
-  tags: z.array(z.string()).optional(),
   draft: z.boolean().optional(),
 });
 
-// Define the 'articles' collection
+// Define the 'articles' collection schema
 const articlesCollection = defineCollection({
   type: 'content',
-  schema: sharedPostSchema.extend({
-    // Add topics field specifically for articles
-    topics: z.array(
-      z.union([
-        z.string(),
-        z.object({
-          id: z.string(),
-          name: z.string().optional()
-        })
-      ])
-    ).optional(),
+  schema: markdownSchema.extend({
+    topics: z.array(z.string()).optional(),
+    image: z.string().optional(),
   }),
 });
 
-// Define the 'blog' collection
+// Define the 'blog' collection schema
 const blogCollection = defineCollection({
   type: 'content',
-  schema: sharedPostSchema, // Reusing the same schema for consistency
+  schema: markdownSchema.extend({
+    tags: z.array(z.string()).optional(),
+    image: z.string().optional(),
+  }),
 });
 
-// Define the 'projects' collection
+// Define the 'other' collection schema
 const otherCollection = defineCollection({
-  type: 'data', // Set to 'data' as projects are defined in projects.json
-  schema: z.array( // Expect an array of projects
-    z.object({
-      title: z.string(),
-      description: z.string().optional(),
-      logo: z.string().optional(), // Path to the logo image (relative to /public/images/projects/)
-      url: z.string(), // External URL for the project
-      order: z.number().optional(), // Optional ordering for projects
-    })
-  ),
+  type: 'content',
+  schema: markdownSchema,
 });
 
-// Export a 'collections' object
+// Export the collections
 export const collections = {
-  other: otherCollection,
   articles: articlesCollection,
   blog: blogCollection,
+  other: otherCollection,
 };

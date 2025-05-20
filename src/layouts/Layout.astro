@@ -29,6 +29,10 @@ const { title, description, image, pagefindIgnore, article } = Astro.props;
 		<link rel="icon" type="image/png" href="/images/favicon.png" />
 		<meta name="generator" content={Astro.generator} />
 
+		<!-- Preload critical assets -->
+		<link rel="preload" href="/images/favicon.png" as="image" fetchpriority="high" />
+		<link rel="preload" href="/images/paradiselabs-logo.png" as="image" fetchpriority="high" />
+
 		<!-- Site Meta -->
 		<title>{title ? `${title} | ParadiseLabs Blog` : 'ParadiseLabs Blog'}</title>
 		<meta name="description" content={description || 'ParadiseLabs, LLC official blog – Building in public, devlogs, and insights on open-source, AI, and startup life.'} />

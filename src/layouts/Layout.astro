@@ -56,8 +56,21 @@ const { title, description, image, pagefindIgnore, article } = Astro.props;
 		<!-- Theme -->
 		<meta name="theme-color" content="#1a2238" />
 
-		<!-- Analytics: Google Analytics Example (add your GA ID) -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script> 
+		
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-XPL3CV36G9"></script>
+		<script is:inline define:vars={{ GA_ID: 'G-XPL3CV36G9' }}>
+			// This script is inlined and not processed by TypeScript
+			// We've added a type declaration file in src/types/gtag.d.ts
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				window.dataLayer.push(arguments);
+			}
+			window.gtag = gtag;
+			gtag('js', new Date());
+			gtag('config', GA_ID);
+		</script>
+
 	</head>
 	<body>
 		<main data-pagefind-ignore={pagefindIgnore}>

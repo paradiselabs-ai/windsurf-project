@@ -5,7 +5,7 @@ author: d34d
 topics: ["AI", "AI Agent", "Agents", "Concept", "DSL", "DSL Prompt Engineering", "MCO", "MCP", "Model Configuration Orchestration", "Multi-Agentic Orchestration", "NLP", "Orchestrator", "Prompt Engineering", "Prompt Language", "PromptLang", "Protocol", "Research", "Technical", "Vibe Coding"]
 description: "🚀 Introducing the Model Configuration Orchestration (MCO) protocol! A standardized approach for AI agent orchestration"
 slug: mco-protocol
-featuredImage: [https://file.notion.so/f/f/75c7c7c9-7571-431e-a684-f75ce773a1d3/94dab441-ab8a-4acd-9aa6-d8cec727768b/Generated_Image_May_22_2025_-_8_45AM.jpeg?table=block&id=1fba7025-1366-8036-bbe4-e8df74879f8f&spaceId=75c7c7c9-7571-431e-a684-f75ce773a1d3&expirationTimestamp=1747958400000&signature=p1gqN-bxikgYpVe0BHJx7SnFn_0JGJYZV_SsY0Fd1YI&downloadName=Generated+Image+May+22%2C+2025+-+8_45AM.jpeg](https://file.notion.so/f/f/75c7c7c9-7571-431e-a684-f75ce773a1d3/94dab441-ab8a-4acd-9aa6-d8cec727768b/Generated_Image_May_22_2025_-_8_45AM.jpeg?table=block&id=1fba7025-1366-8036-bbe4-e8df74879f8f&spaceId=75c7c7c9-7571-431e-a684-f75ce773a1d3&expirationTimestamp=1747958400000&signature=p1gqN-bxikgYpVe0BHJx7SnFn_0JGJYZV_SsY0Fd1YI&downloadName=Generated+Image+May+22%2C+2025+-+8_45AM.jpeg)
+featuredImage: "/images/articles/mco.jpeg"
 draft: false
 
 ---

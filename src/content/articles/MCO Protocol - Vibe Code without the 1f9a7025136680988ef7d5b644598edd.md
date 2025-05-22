@@ -154,4 +154,4 @@ If you’re tired of prompt engineering hell and want to build something that ac
 
 After all, I built this because I was frustrated. If you’ve felt that same frustration, maybe this can help.
 
-*d34d is the Lead Developer at ParadiseLabs, where he builds tools for AI orchestration and spends too much time debugging things that should just work. Follow ParadiseLabs on Twitter @paradiselabs_ai for more rants about AI development.*
+*d34d is a co-founder and Lead Developer at ParadiseLabs, where he builds tools for AI orchestration and spends too much time debugging things that should just work, damnit. Follow ParadiseLabs on Twitter/X [@paradiselabs_ai](https://X.com/paradiselabs_ai) for more rants about AI development.*

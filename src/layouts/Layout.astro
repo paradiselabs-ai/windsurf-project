@@ -33,19 +33,25 @@ const { title, description, image, pagefindIgnore, article } = Astro.props;
 		<link rel="preload" href="/images/favicon.png" as="image" fetchpriority="high" />
 		<link rel="preload" href="/images/paradiselabs-logo.png" as="image" fetchpriority="high" />
 
-		<!-- Site Meta -->
+		<!-- Enhanced SEO Meta Tags -->
 		<title>{title ? `${title} | ParadiseLabs Blog` : 'ParadiseLabs Blog'}</title>
 		<meta name="description" content={description || 'ParadiseLabs, LLC official blog – Building in public, devlogs, and insights on open-source, AI, and startup life.'} />
 		<meta name="author" content="ParadiseLabs, LLC" />
 		<meta name="copyright" content="ParadiseLabs, LLC" />
 		<meta name="application-name" content="ParadiseLabs Blog" />
-		<link rel="canonical" href={Astro.site || 'https://paradiselabs.co'} />
-		<meta name="robots" content="index, follow" />
 		<meta name="publisher" content="ParadiseLabs, LLC" />
+		
+		<!-- Canonical URL to prevent duplicate content issues -->
+		<link rel="canonical" href={new URL(Astro.url.pathname, 'https://paradiselabs.co').toString()} />
+		
+		<!-- Robots meta tag for search engines -->
+		<meta name="robots" content="index, follow" />
+
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={Astro.url} />
 		<meta property="og:title" content={title ? `${title} | ParadiseLabs Blog` : 'ParadiseLabs Blog'} />
 		<meta property="og:description" content={description || 'ParadiseLabs, LLC official blog – Building in public, devlogs, and insights on open-source, AI, and startup life.'} />
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content={Astro.site || 'https://paradiselabs.co'} />
 		<meta property="og:image" content={image ? image.src : '/images/favicon.png'} />
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={title ? `${title} | ParadiseLabs Blog` : 'ParadiseLabs Blog'} />
@@ -56,7 +62,6 @@ const { title, description, image, pagefindIgnore, article } = Astro.props;
 		<!-- Theme -->
 		<meta name="theme-color" content="#1a2238" />
 
-		
 		<!-- Google tag (gtag.js) -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=G-XPL3CV36G9"></script>
 		<script is:inline define:vars={{ GA_ID: 'G-XPL3CV36G9' }}>
@@ -70,6 +75,23 @@ const { title, description, image, pagefindIgnore, article } = Astro.props;
 			gtag('js', new Date());
 			gtag('config', GA_ID);
 		</script>
+
+		<!-- JSON-LD Structured Data for SEO -->
+		<script type="application/ld+json" set:html={JSON.stringify({
+			'@context': 'https://schema.org',
+			'@type': 'WebSite',
+			'name': 'ParadiseLabs Blog',
+			'url': 'https://paradiselabs.co',
+			'description': description || 'ParadiseLabs, LLC official blog – Building in public, devlogs, and insights on open-source, AI, and startup life.',
+			'publisher': {
+				'@type': 'Organization',
+				'name': 'ParadiseLabs, LLC',
+				'logo': {
+					'@type': 'ImageObject',
+					'url': 'https://paradiselabs.co/images/paradiselabs-logo.png'
+				}
+			}
+		})} />
 
 	</head>
 	<body>

@@ -11,6 +11,7 @@ draft: false
 ---
 
 # Vibe Coding is Great, but Orchestration Might Be Better
+### *Written by d34d, Co-Founder and Developer at ParadiseLabs*
 
 In the rapidly evolving landscape of AI development, we've all experienced the frustration of "vibe coding" – that moment when an AI agent seems to understand your requirements perfectly, only to deliver something that misses the mark entirely. At ParadiseLabs, we've been tackling this challenge head-on, and today we're excited to introduce our solution: **MCO (Model Configuration Orchestration)**.
 

@@ -119,4 +119,4 @@ We believe MCO has the potential to become a standard for reliable AI agent orch
 
 "MCO was born from our own frustrations with AI development," says our team. "We're sharing it because we believe everyone deserves more reliable AI agents, regardless of which framework they're using."
 
-*d34d is a co-founder and Lead Developer at ParadiseLabs, where he builds tools for AI orchestration and spends too much time debugging things that should just work, damnit. Follow ParadiseLabs on Twitter/X [@paradiselabs_ai](https://X.com/paradiselabs_ai) for more rants about AI development.*
+*d34d is a co-founder and Lead Developer at ParadiseLabs, where he builds tools for AI orchestration and spends too much time debugging things that should just work*

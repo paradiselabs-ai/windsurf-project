@@ -32,27 +32,6 @@ const quickInfo = defineCollection({
   })
 });
 
-const socials = defineCollection({
-  loader: file("src/content/socials.json"),
-  schema: z.object({
-    id: z.number(),
-    icon: z.union([lucideIconSchema, simpleIconSchema]),
-    text: z.string(),
-    link: z.string().url(),
-  })
-});
-
-const workExperience = defineCollection({
-  loader: file("src/content/work.json"),
-  schema: z.object({
-    id: z.number(),
-    title: z.string(),
-    company: z.string(),
-    duration: z.string(),
-    description: z.string(),
-  })
-});
-
 const tags = defineCollection({
   loader: file("src/content/tags.json"),
   schema: z.object({
@@ -86,4 +65,4 @@ const articles = defineCollection({
   })
 });
 
-export const collections = { tags, posts, articles, other, quickInfo, socials, workExperience };
+export const collections = { tags, posts, articles, other, quickInfo };

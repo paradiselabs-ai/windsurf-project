@@ -1,0 +1,134 @@
+---
+import '../styles/article-list.css';
+
+import { getCollection } from "astro:content";
+import Card from "../components/Card.astro";
+import Icon from "../components/Icon.astro";
+import Layout from "../layouts/Layout.astro";
+import { openGraph, name as siteName } from 'spectre:globals';
+
+// Define thought and topic types
+interface ThoughtData {
+  title: string;
+  date: Date;
+  description: string;
+  draft?: boolean;
+  topics?: (string | { id: string; name?: string })[];
+}
+
+interface Thought {
+  id: string;
+  slug: string;
+  body: string;
+  collection: string;
+  data: ThoughtData;
+}
+
+type TopicObject = { id: string; name?: string };
+type Topic = string | TopicObject;
+
+// Get thoughts with type assertion
+const thoughts = await getCollection('thoughts') as unknown as Thought[];
+const filteredThoughts = thoughts.filter(thought => thought.data.draft !== true);
+
+// Extract topics from thoughts
+const topics = filteredThoughts.flatMap((thought) => {
+  const thoughtTopics = thought.data.topics || [] as Topic[];
+  return thoughtTopics.map(topic => typeof topic === 'object' ? topic.id : topic);
+});
+
+---
+<Layout
+  title={openGraph.blog?.title ? "Thoughts | " + openGraph.blog.title : "Thoughts"}
+  description={"A collection of thoughts and reflections."}
+  pagefindIgnore={true}
+>
+  <div class="layout-grid-left" slot="left">
+    <Card class="flex-col-card">
+      <h2 class="no-mt">Filter by Topic</h2>
+      <ul class="tags-list">
+        {Array.from(new Set(topics)).map((topic: string) => (
+          <li>
+            <a
+              class="blog-tag" 
+              href={`/thoughts?topics=${encodeURIComponent(topic)}`}
+              data-topic={topic}
+            >
+              {topic}
+            </a>
+          </li>
+        ))}
+        {topics.length === 0 && <li>No topics found.</li>}
+      </ul>
+    </Card>
+  </div>
+  <div class="layout-grid-right" slot="right">
+    <Card>
+      <div class="header-container">
+        <Icon type="lucide" name="lightbulb" width={24} height={24} class='glow-icon' /> 
+        <h2>Latest Thoughts</h2>
+      </div>
+      <div class="content-container">
+        {filteredThoughts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).map((thought) => (
+          <a href={`/thoughts/${thought.id}`} class="post-container" data-topics={(thought.data.topics || [] as Topic[]).map(topic => typeof topic === 'object' ? topic.id : topic).join(",")}> 
+            <div class="post-header">
+              <h3>{thought.data.title}</h3>
+              <span class="post-date">{thought.data.date.toLocaleDateString()}</span>
+            </div>
+            <span>{thought.data.description}</span>
+          </a>
+        ))}
+        {filteredThoughts.length === 0 && <p>No thoughts found yet.</p>}
+      </div>
+    </Card>
+  </div>
+</Layout>
+<script>
+  // Script for client-side topic filtering
+  const topicElements = document.querySelectorAll('.blog-tag');
+  const url = new URL(window.location.href);
+  const currentTopics = url.searchParams.get('topics')?.split(',').filter((topic) => topic.length > 0) || [];
+  const thoughts = document.querySelectorAll('.post-container');
+
+  // Set initial active state for topics and adjust hrefs
+  topicElements.forEach((topicElement) => {
+    if (topicElement instanceof HTMLAnchorElement) {
+      const topicValue = topicElement.dataset.topic;
+      let active = false;
+      if (topicValue && currentTopics.includes(topicValue)) {
+        topicElement.classList.add('active');
+        active = true;
+      }
+
+      // Create new URLSearchParams for link construction
+      const newParams = new URLSearchParams(url.search);
+      if (active) {
+        // Remove topic if active (toggle off)
+        const updatedTopics = currentTopics.filter(t => t !== topicValue);
+        if (updatedTopics.length > 0) {
+          newParams.set('topics', updatedTopics.join(','));
+        } else {
+          newParams.delete('topics');
+        }
+      } else if (topicValue) { // Only add topic if topicValue is defined
+        // Add topic if not active (toggle on)
+        const updatedTopics = [...currentTopics, topicValue];
+        newParams.set('topics', updatedTopics.join(','));
+      }
+      topicElement.href = `/thoughts?${newParams.toString()}`;
+    }
+  });
+
+  // Filter thoughts based on current topics
+  thoughts.forEach((thoughtElement) => {
+    if (thoughtElement instanceof HTMLElement) { // Ensure it's an HTMLElement for dataset
+      const thoughtTopicsString = thoughtElement.dataset.topics;
+      const thoughtTopics = thoughtTopicsString ? thoughtTopicsString.split(',') : [];
+      if (currentTopics.length > 0 && !currentTopics.every((topic) => thoughtTopics.includes(topic))) {
+        thoughtElement.style.display = 'none';
+      } else {
+        thoughtElement.style.display = ''; // Ensure it's visible if not filtered
+      }
+    }
+  });
+</script>

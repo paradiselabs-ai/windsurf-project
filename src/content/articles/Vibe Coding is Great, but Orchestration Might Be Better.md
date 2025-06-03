@@ -2,7 +2,7 @@
 title: "Vibe Coding is Great, but Orchestration Might Be Better"
 date: 2025-05-22T14:00:00-05:00
 author: d34d
-topics: ["AI Agent", "Orchestration", "MCO Protocol", "Prompt Engineering", "Agentic"]
+tags: ["AI Agent", "Orchestration", "MCO Protocol", "Prompt Engineering", "Agentic"]
 description: "🚀 Introducing the Model Configuration Orchestration (MCO) protocol! A standardized approach for AI agent orchestration"
 slug: mco-protocol
 featuredImage: "/images/articles/mco.jpeg"

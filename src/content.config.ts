@@ -65,4 +65,15 @@ const articles = defineCollection({
   })
 });
 
-export const collections = { tags, posts, articles, other, quickInfo };
+const thoughts = defineCollection({
+  loader: glob({ base: "src/content/thoughts", pattern: "**/*.{md,mdx}" }),
+  schema: ({ image }) => z.object({
+    title: z.string(),
+    description: z.string(),
+    date: z.coerce.date(),
+    image: image().optional(),
+    link: z.string().url().optional() // Retaining 'link' in case it's useful
+  })
+});
+
+export const collections = { tags, posts, articles, other, quickInfo, thoughts };

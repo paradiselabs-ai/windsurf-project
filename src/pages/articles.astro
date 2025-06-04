@@ -1,41 +1,18 @@
 ---
 import '../styles/article-list.css';
 
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 import Card from "../components/Card.astro";
 import Icon from "../components/Icon.astro";
 import Layout from "../layouts/Layout.astro";
 import { openGraph, name as siteName } from 'spectre:globals';
 
-// Define article and topic types
-interface ArticleData {
-  title: string;
-  date: Date;
-  description: string;
-  draft?: boolean;
-  topics?: (string | { id: string; name?: string })[];
-}
+// Get articles with explicit typing
+const allArticles: CollectionEntry<'articles'>[] = await getCollection('articles');
+const filteredArticles = allArticles.filter((article: CollectionEntry<'articles'>) => article.data.draft !== true);
 
-interface Article {
-  id: string;
-  slug: string;
-  body: string;
-  collection: string;
-  data: ArticleData;
-}
-
-type TopicObject = { id: string; name?: string };
-type Topic = string | TopicObject;
-
-// Get articles with type assertion
-const articles = await getCollection('articles') as unknown as Article[];
-const filteredArticles = articles.filter(article => article.data.draft !== true);
-
-// Extract topics from articles
-const topics = filteredArticles.flatMap((article) => {
-  const articleTopics = article.data.topics || [] as Topic[];
-  return articleTopics.map(topic => typeof topic === 'object' ? topic.id : topic);
-});
+// Extract topics from articles - topics are expected to be string[] based on config
+const topics: string[] = filteredArticles.flatMap((article: CollectionEntry<'articles'>) => article.data.topics || []);
 
 ---
 <Layout
@@ -70,13 +47,20 @@ const topics = filteredArticles.flatMap((article) => {
         <h2>Latest Articles</h2>
       </div>
       <div class="content-container">
-        {filteredArticles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).map((article) => (
-          <a href={`/articles/${article.id}`} class="post-container" data-topics={(article.data.topics || [] as Topic[]).map(topic => typeof topic === 'object' ? topic.id : topic).join(",")}> 
+        {filteredArticles.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()).map((article: CollectionEntry<'articles'>) => (
+          <a href={`/articles/${article.slug}`} class="post-container" data-topics={(article.data.topics || []).join(",")}> 
             <div class="post-header">
               <h3>{article.data.title}</h3>
               <span class="post-date">{article.data.date.toLocaleDateString()}</span>
             </div>
             <span>{article.data.description}</span>
+            {article.data.topics && article.data.topics.length > 0 && (
+              <div class="post-topics">
+                {article.data.topics.map((topic: string) => (
+                  <span class="topic-badge">{topic}</span>
+                ))}
+              </div>
+            )}
           </a>
         ))}
         {filteredArticles.length === 0 && <p>No articles found yet.</p>}
@@ -84,6 +68,22 @@ const topics = filteredArticles.flatMap((article) => {
     </Card>
   </div>
 </Layout>
+
+<style>
+  .post-topics {
+    margin-top: 0.5rem;
+  }
+  .topic-badge {
+    display: inline-block;
+    background-color: var(--action-color-muted);
+    color: var(--action-color-contrast);
+    padding: 0.25em 0.6em;
+    border-radius: var(--radius-small);
+    font-size: 0.8em;
+    margin-right: 0.5em;
+    margin-bottom: 0.25em;
+  }
+</style>
 <script>
   // Script for client-side topic filtering
   const topicElements = document.querySelectorAll('.blog-tag');
